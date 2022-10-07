@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
         }
     });
 
-    connect(this, &MainWindow::destroy, this, [=]()
+    connect(this, &MainWindow::destroyed, this, [=]()
     {
         gen->quit();
         gen->wait();
