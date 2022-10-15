@@ -5,6 +5,7 @@
 
 Generate::Generate(QObject *parent) : QObject(parent), QRunnable()
 {
+    // 工作完毕后自动析构
     setAutoDelete(true);
 }
 
