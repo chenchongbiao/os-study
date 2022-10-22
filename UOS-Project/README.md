@@ -1,4 +1,4 @@
-记录UOS应用开发
+内容来自统信UOS应用开发进阶教程
 
 # VS Code配置环境
 
@@ -9,6 +9,27 @@ CMake：支持VS Code的扩展语言。
 CMake Tools：支持VS Code的扩展。
 
 C/C++：C++代码提示。
+
+# DTK加入到QT设计师中
+
+下载dtkwidget进行编译，选择release5.5的分支，不要使用主分支
+
+```bash
+git clone https://github.com/linuxdeepin/dtkwidget.git -b release/5.5
+```
+
+```bash
+sudo apt install qttools5-dev
+# build 在dtkwidget执行下面命令
+cmake ./plugin/dtkuiplugin -B build -DINSTALL_PLUGIN=ON -DCMAKE_INSTALL_PREFIX=/usr
+cmake --build build -j $(nproc)
+```
+
+在build文件夹中找到libdtkuiplugin.so文件，并复制到设计师的插件里，重启QtCreator可以在设计师看到dtk控件。
+
+```bash
+sudo cp libdtkuiplugin.so /usr/lib/x86_64-linux-gnu/qt5/plugins/designer/
+```
 
 # CMake演示项目
 
