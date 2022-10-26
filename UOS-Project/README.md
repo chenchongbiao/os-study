@@ -10,12 +10,18 @@ CMake Tools：支持VS Code的扩展。
 
 C/C++：C++代码提示。
 
-# DTK加入到QT设计师中
+# dtkwidget
 
-下载dtkwidget进行编译，选择release5.5的分支，不要使用主分支
+仓库链接：[https://github.com/linuxdeepin/dtkwidget](https://github.com/linuxdeepin/dtkwidget)
+
+介绍：提供dtk基础控件，方便开发统一风格的应用
+
+## DTK加入到QT设计师中
+
+下载dtkwidget进行编译，如果是cmake工程使用以下操作，使用了tag 5.6.0.2
 
 ```bash
-git clone https://github.com/linuxdeepin/dtkwidget.git -b release/5.5
+git clone https://github.com/linuxdeepin/dtkwidget.git
 ```
 
 ```bash
@@ -25,15 +31,31 @@ cmake ./plugin/dtkuiplugin -B build -DINSTALL_PLUGIN=ON -DCMAKE_INSTALL_PREFIX=/
 cmake --build build -j $(nproc)
 ```
 
-在build文件夹中找到libdtkuiplugin.so文件，并复制到设计师的插件里，重启QtCreator可以在设计师看到dtk控件。
+编译过程可能出现Could NOT find Doxygen (missing:  DOXYGEN_EXECUTABLE)
 
 ```bash
-sudo cp libdtkuiplugin.so /usr/lib/x86_64-linux-gnu/qt5/plugins/designer/
+sudo apt install doxygen  
 ```
+
+在build文件夹中找到libdcustomwidgets.so文件，并复制到设计师的插件里，重启QtCreator可以在设计师看到dtk控件。
+
+```bash
+sudo cp libdcustomwidgets.so /usr/lib/x86_64-linux-gnu/qt5/plugins/designer/
+```
+
+如果代码是qmake工程，如release/5.5分支。
+
+可以使用QtCreator进行项目构建，在编译结果中plugins/designer下有libdcustomwidgets.so文件，复制到指定位置。
+
+## 自定义控件
+
+使用QtCreator新建启动项目->Qt设计师自定义控件
+
+设置控件类->说明中添加组
 
 # CMake演示项目
 
-项目名cmake-demo
+项目名：cmake-demo
 
 通过快捷键“Ctrl+Shift+P”，打开命令面板并输入“cmake:Quick Start”
 
@@ -226,3 +248,9 @@ D-Bus分为以下两种类型。
 总线层：实际上由D-Bus守护进程提供。它在Linux系统启动时运行，负责进程间的消息路由和传递，其中包括Linux桌面环境和Linux内核的消息传递。
 
 封装层：一系列基于特定应用程序框架的Wrapper库，将D-Bus底层接口封装成方便用户使用的通用API。
+
+## 统信UOS磁盘管理器
+
+项目链接：[https://github.com/linuxdeepin/deepin-diskmanager.git](https://github.com/linuxdeepin/deepin-diskmanager.git)
+
+磁盘分区工具，使用了DBus
