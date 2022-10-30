@@ -321,6 +321,12 @@ Exec=/usr/bin/dbusserver
 
 Name是服务器的公共名，Exec是服务器的执行路径。
 
+## Go DBus
+
+[https://pkg.go.dev/github.com/godbus/dbus/v5](https://pkg.go.dev/github.com/godbus/dbus/v5)
+
+[dbus in go](https://www.codeplayer.org/Wiki/go/%E5%9C%A8go%E4%B8%AD%E4%BD%BF%E7%94%A8dbus%E5%92%8Cgsettings.html#orgd279943)
+
 ## 统信UOS磁盘管理器
 
 项目链接：[https://github.com/linuxdeepin/deepin-diskmanager.git](https://github.com/linuxdeepin/deepin-diskmanager.git)
