@@ -267,6 +267,59 @@ D-Bus分为以下两种类型。
 
 项目名：QtDBus-demo
 
+## D-Bus XML自动生成Proxy类
+
+Proxy Object提供了一种更加直观的方式来访问Service，如同调用本地对象的方法一样。
+生成Proxy类的流程如下：
+A、使用工具qdbuscpp2xml从object.h生成XML文件；
+qdbuscpp2xml -M server.h -o com.bluesky.test.xml
+
+```xml
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="com.bluesky
+.test.value">
+    <method name="maxValue">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="minValue">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="value">
+      <arg type="i" direction="out"/>
+    </method>
+  </interface>
+</node>
+```
+
+使用工具qdbusxml2cpp从XML文件生成继承自QDBusInterface的类
+qdbusxml2cpp com.bluesky.test.xml -p valueInterface
+生成两个文件：valueInterface.cpp和valueInterface.h
+
+## Adapter注册Object
+
+可以直接把test类注册为消息总线上的一个Object，
+大多数情况下，可能只需要把自定义的类里的方法有选择的发布到消息总线上，使用Adapter可以很方便的实现选择性发布。
+生成Adapter类的流程如下：
+A、使用工具 qdbuscpp2xml从test.h生成XML文件
+qdbuscpp2xml -M server.h -o com.bluesky.test.xml
+B、编辑com.bluesky.test.xml，选择需要发布的method，不需要发布的删除。
+C、使用工具qdbusxml2cpp从XML文件生成继承自QDBusInterface的类
+qdbusxml2cpp com.bluesky.test.xml -i server.h -a valueAdaptor
+生成两个文件：valueAdaptor.cpp和valueAdaptor.h
+
+## 自动启动Service
+
+D-Bus系统提供了一种机制可以在访问某个service时，自动把应用程序运行起来。
+ 需要在/usr/share/dbus-1/services下面建立com.bluesky.test.service文件，文件的内容如下：
+
+```txt
+[D-BUS Service]
+Name=com.bluesky.test
+Exec=/usr/bin/dbusserver
+```
+
+Name是服务器的公共名，Exec是服务器的执行路径。
 
 ## 统信UOS磁盘管理器
 
