@@ -2,5 +2,6 @@ TEMPLATE = subdirs
 SUBDIRS += \
     server \
     MessageTest \
-    InterfaceTest
+    InterfaceTest \
+    AdapterTest
 

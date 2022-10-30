@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 
     //建立到session bus的连接
     QDBusConnection connection = QDBusConnection::sessionBus();
-    //在session bus上注册名为com.scorpio.test的服务
+    //在session bus上注册名为com.bluesky.test的服务
     if(!connection.registerService("com.bluesky.test"))
     {
         qDebug() << "error:" << connection.lastError().message();
