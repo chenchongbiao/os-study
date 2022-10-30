@@ -261,6 +261,13 @@ D-Bus分为以下两种类型。
 
 封装层：一系列基于特定应用程序框架的Wrapper库，将D-Bus底层接口封装成方便用户使用的通用API。
 
+## Dbus例子
+
+[原文链接](https://blog.csdn.net/qq_39392008/article/details/120703987#t8)
+
+项目名：QtDBus-demo
+
+
 ## 统信UOS磁盘管理器
 
 项目链接：[https://github.com/linuxdeepin/deepin-diskmanager.git](https://github.com/linuxdeepin/deepin-diskmanager.git)
