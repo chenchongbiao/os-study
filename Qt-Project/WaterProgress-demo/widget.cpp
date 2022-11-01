@@ -45,65 +45,29 @@ Widget::~Widget()
 void Widget::updateWaterProgress()
 {
 //    QtConcurrent::run()QtConcurrent
-    loadStatusWp->setValue(loadPercent);
-
-//    cpuPercent = computerCpu();  // 计算CPU使用率
-//    cpuStatusWp->setValue(cpuPercent);
-    cpuStatusWp->setValue(cpuPercent);
-    memStatusWp->setValue(memoryPercent);
-    ui->memory_space->setText(QString("%1MB/%2MB").arg(memoryUse).arg(memoryAll));
-    diskStatusWp->setValue(diskPercent);
-    ui->disk_space->setText(QString("%1GB/%2GB").arg(diskUse).arg(diskAll));
+    loadStatusWp->setValue(loadPercent);  // 修改负载状态
+    ui->load_status_info->setText(loadMsg);
+    cpuStatusWp->setValue(cpuPercent);  // 修改CPU状态
+    memStatusWp->setValue(memoryPercent);  // 修改内存状态
+    ui->memory_space->setText(memoryMsg);
+    diskStatusWp->setValue(diskPercent);  // 修改硬盘状态
+    ui->disk_space->setText(diskyMsg);
 
 
-}
-
-void Widget::setLoad(float load)
-{
-     this->load = load;
-}
-
-/*!
- * \brief Widget::getLoad
- * 获取1分钟的负载均衡的结果
- */
-float Widget::getLoad()
-{
-    return load;
-}
-
-void Widget::setCpuNum(int cpuNum)
-{
-    this->cpuNum = cpuNum;
-}
-
-int Widget::getCpuNum()
-{
-    return cpuNum;
-}
-
-void Widget::setCpuPercent(int cpuPercent)
-{
-    this->cpuPercent = cpuPercent;
-}
-
-int Widget::getCpuPercent()
-{
-    return cpuPercent;
 }
 
 void Widget::getCPU()
 {
     if (process->state() == QProcess::NotRunning) {
         totalNew = idleNew = 0;
-        process->start("cat /proc/stat");
+        process->start(QString("cat %1").arg(cpuFile));
     }
 }
 
 void Widget::getMemory()
 {
     if (process->state() == QProcess::NotRunning) {
-        process->start("cat /proc/meminfo");
+        process->start(QString("cat %1").arg(memFile));
     }
 }
 
@@ -116,7 +80,7 @@ void Widget::getDisk()
 
 void Widget::getSystemInfo()
 {
-    issue = Utils::exec("cat /etc/issue").remove(" \\n").remove("\\l");  // 发行版
+    issue = Utils::exec(QString("cat %1").arg(issueFile)).remove(" \\n").remove("\\l");  // 发行版
     ip = Utils::exec("hostname -I").split(" ").at(0);
     architecture = Utils::exec("uname -m");
 }
@@ -126,7 +90,7 @@ void Widget::getSystemInfo()
  */
 void Widget::computerLoad()
 {
-    load = Utils::exec("uptime | awk -F 'average: ' '{print $2}' | awk -F ',' '{print $1}'").toFloat();  // 获取负载均衡数据
+    load = Utils::exec("uptime" + Utils::awk("average: ","2") + Utils::awk(",","1")).toFloat();  // 获取负载均衡数据
     // 算法来自宝塔，因为水球的数值为整形，最后做了转换
     loadPercent = (int)round(load / (cpuNum * 2) * 100);
     if (loadPercent > 100)
@@ -135,19 +99,19 @@ void Widget::computerLoad()
     }
     if (loadPercent <= 30)
     {
-        ui->load_status_info->setText("运行流畅");
+        loadMsg = "运行流畅";
     }
     if (loadPercent > 30 && loadPercent <= 70)
     {
-        ui->load_status_info->setText("运行正常");
+        loadMsg = "运行正常";
     }
     if (loadPercent > 70 && loadPercent <= 90)
     {
-        ui->load_status_info->setText("运行缓慢");
+        loadMsg = "运行缓慢";
     }
     if (loadPercent > 90)
     {
-        ui->load_status_info->setText("运行堵塞");
+        loadMsg = "运行堵塞";
     }
 }
 
@@ -184,7 +148,7 @@ void Widget::computerCpu()
 ////            qDebug() << tmpList.at(0).toFloat()<< " " << tmpList.at(1).toFloat() << " " << tmpList.at(2).toFloat() << " " << tmpList.at(3).toFloat() << "cpu使用率\n";
 //        }
 //    }
-    QStringList list = Utils::exec("cat /proc/stat | grep 'cpu  '").split(" ");
+    QStringList list = Utils::exec(QString("cat %1 | grep 'cpu  '").arg(cpuFile)).split(" ");
     idleNew = list.at(5).toInt();
     foreach (QString value, list) {
         totalNew += value.toInt();
@@ -207,7 +171,6 @@ void Widget::ReadData()
                 foreach (QString value, list) {
                     totalNew += value.toInt();
                 }
-
                 int total = totalNew - totalOld;
                 int idle = idleNew - idleOld;
                 cpuPercent = 100 * (total - idle) / total;
@@ -234,6 +197,8 @@ void Widget::ReadData()
                 memoryFree += s.left(s.length() - 3).toInt() / KB;
                 memoryUse = memoryAll - memoryFree;
                 memoryPercent = 100 * memoryUse / memoryAll;
+                memoryMsg = QString("%1MB/%2MB").arg(memoryUse).arg(memoryAll);
+                qDebug() << s;
                 break;
             } else if (s.startsWith("/dev/sda") | s.startsWith("/dev/nvme")) {
                 s = s.replace(QRegExp("[\\s]+"), " ");
@@ -241,6 +206,7 @@ void Widget::ReadData()
                 diskUse = list.at(2).left(list.at(2).length() - 1).toInt();
                 diskAll = list.at(1).left(list.at(1).length() - 1).toInt();
                 diskPercent = list.at(4).left(list.at(4).length() - 1).toInt();
+                diskyMsg = QString("%1/%2").arg(list.at(2)).arg(list.at(1));
 //                qDebug() << QString("diskUse %1 diskAll %2 diskPercent %3").arg(diskUse).arg(diskAll).arg(diskPercent);
                 break;
             }
