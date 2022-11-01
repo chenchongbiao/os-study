@@ -19,12 +19,6 @@ WaterProgress::~WaterProgress()
 //    delete ui;
 }
 
-void WaterProgress::updateValue()
-{
-    int value = this->value();
-    this->setValue(value+1);
-}
-
 QTimer* WaterProgress::getTimer()
 {
     return timer;

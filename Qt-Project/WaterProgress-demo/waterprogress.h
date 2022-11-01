@@ -16,7 +16,6 @@ public:
 
     QTimer *getTimer();
 private slots:
-    void updateValue();
 
 private:
     QTimer *timer;               // 绘制定时器
