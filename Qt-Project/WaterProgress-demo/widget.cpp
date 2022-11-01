@@ -44,7 +44,6 @@ Widget::~Widget()
 
 void Widget::updateWaterProgress()
 {
-//    QtConcurrent::run()QtConcurrent
     loadStatusWp->setValue(loadPercent);  // 修改负载状态
     ui->load_status_info->setText(loadMsg);
     cpuStatusWp->setValue(cpuPercent);  // 修改CPU状态
@@ -52,8 +51,6 @@ void Widget::updateWaterProgress()
     ui->memory_space->setText(memoryMsg);
     diskStatusWp->setValue(diskPercent);  // 修改硬盘状态
     ui->disk_space->setText(diskyMsg);
-
-
 }
 
 void Widget::getCPU()
@@ -198,7 +195,7 @@ void Widget::ReadData()
                 memoryUse = memoryAll - memoryFree;
                 memoryPercent = 100 * memoryUse / memoryAll;
                 memoryMsg = QString("%1MB/%2MB").arg(memoryUse).arg(memoryAll);
-                qDebug() << s;
+//                qDebug() << s;
                 break;
             } else if (s.startsWith("/dev/sda") | s.startsWith("/dev/nvme")) {
                 s = s.replace(QRegExp("[\\s]+"), " ");
@@ -220,10 +217,9 @@ void Widget::initUI()
     ui->cpu_core_num->setText(QString("%1核心").arg(cpuNum));
     getSystemInfo();  // 获取系统信息
     ui->system_info->setText(QString("系统：%1 %2   网络：%3").arg(issue).arg(architecture).arg(ip));
-    loadStatusWp = new WaterProgress(ui->load_status,1000);
-    cpuStatusWp = new WaterProgress(ui->cpu_status,1000);
+    loadStatusWp = new WaterProgress(ui->load_status,900);
+    cpuStatusWp = new WaterProgress(ui->cpu_status,900);
     memStatusWp = new WaterProgress(ui->memory_status,300);
-    diskStatusWp = new WaterProgress(ui->disk_status,1500);
-
+    diskStatusWp = new WaterProgress(ui->disk_status,1000);
     updateWaterProgress();
 }
