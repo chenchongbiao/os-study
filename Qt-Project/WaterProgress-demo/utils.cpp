@@ -46,7 +46,9 @@ QString Utils::readFile(const QString &filePath) {
     file.close();
     return text;
 }
-
+QString Utils::awk(const QString &F,const QString &col) {
+    return QString(" | awk -F '%1' '{print $%2}'").arg(F,col);
+}
 bool Utils::isFileExist(const QString &filePath) {
     QFileInfo fileInfo(filePath);
     return fileInfo.isFile();

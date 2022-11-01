@@ -11,6 +11,7 @@ public:
     static QString writeFile(const QString &filePath, const QString &text);
     static QString writeSystemFile(const QString &filePath, const QString &text);
     static QString readFile(const QString &filePath);
+    static QString awk(const QString &F,const QString &col);
     static bool isFileExist(const QString &filePath);
 };
 
