@@ -233,9 +233,7 @@ void terminate：用于强制结束线程，不保证数据完整性和资源释
 
 项目名：WaterProgress-demo
 
-介绍：完成负载、CPU使用率、内存使用率、磁盘使用率的信息获取，使用DWaterProgress控件进行显示，
-
-使用库：QTimer、QProcess、QtConcurrent
+介绍：完成负载、CPU使用率、内存使用率、磁盘使用率的信息获取，使用DWaterProgress控件进行显示，使用QTimer定时检测硬件数据变化，使用QProcess调用外部程序执行指令，QtConcurrent并发模块将计算部分放入子线程中。
 
 参考：[Qt编写获取CPU占用率、内存信息、硬盘容量、已运行时间等功能](http://www.qtcn.org/bbs/read-htm-tid-60613.html)
 
