@@ -236,11 +236,13 @@ void Widget::ReadData()
                 memoryPercent = 100 * memoryUse / memoryAll;
                 break;
             } else if (s.startsWith("/dev/sda") | s.startsWith("/dev/nvme")) {
+                s = s.replace(QRegExp("[\\s]+"), " ");
                 QStringList list = s.split(" ");
-                diskUse = list.at(4).left(list.at(4).length() - 1).toInt();
-                diskAll = list.at(2).left(list.at(2).length() - 1).toInt();
-                diskPercent = list.at(9).left(list.at(9).length() - 1).toInt();
-    //            qDebug() << QString("diskUse %1 diskAll %2 diskPercent %3").arg(diskUse).arg(diskAll).arg(diskPercent);
+                diskUse = list.at(2).left(list.at(2).length() - 1).toInt();
+                diskAll = list.at(1).left(list.at(1).length() - 1).toInt();
+                diskPercent = list.at(4).left(list.at(4).length() - 1).toInt();
+//                qDebug() << QString("diskUse %1 diskAll %2 diskPercent %3").arg(diskUse).arg(diskAll).arg(diskPercent);
+                break;
             }
         }
     });
@@ -255,7 +257,7 @@ void Widget::initUI()
     loadStatusWp = new WaterProgress(ui->load_status,1000);
     cpuStatusWp = new WaterProgress(ui->cpu_status,1000);
     memStatusWp = new WaterProgress(ui->memory_status,300);
-    diskStatusWp = new WaterProgress(ui->disk_status,500);
+    diskStatusWp = new WaterProgress(ui->disk_status,1500);
 
     updateWaterProgress();
 }
