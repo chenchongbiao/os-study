@@ -7,13 +7,13 @@
     <x>0</x>
     <y>0</y>
     <width>730</width>
-    <height>111</height>
+    <height>473</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <widget class="QWidget" name="menuWidget" native="true">
+  <widget class="QWidget" name="top_menu" native="true">
    <property name="geometry">
     <rect>
      <x>0</x>
@@ -23,93 +23,137 @@
     </rect>
    </property>
   </widget>
-  <widget class="QWidget" name="widget" native="true">
+  <widget class="QWidget" name="left_menu2" native="true">
    <property name="geometry">
     <rect>
-     <x>0</x>
+     <x>590</x>
      <y>60</y>
-     <width>331</width>
-     <height>52</height>
+     <width>140</width>
+     <height>301</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QPushButton" name="btn1">
-      <property name="minimumSize">
-       <size>
-        <width>75</width>
-        <height>36</height>
-       </size>
+     <widget class="QPushButton" name="menu_home">
+      <property name="font">
+       <font>
+        <family>Zeniq</family>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>75</width>
-        <height>36</height>
-       </size>
+      <property name="styleSheet">
+       <string notr="true">font: 11pt &quot;Zeniq&quot;;</string>
       </property>
       <property name="text">
-       <string>容器管理</string>
+       <string>首页</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="btn2">
-      <property name="minimumSize">
-       <size>
-        <width>75</width>
-        <height>36</height>
-       </size>
+     <widget class="QPushButton" name="menu_docker">
+      <property name="font">
+       <font>
+        <family>Zeniq</family>
+        <pointsize>11</pointsize>
+        <weight>50</weight>
+        <italic>false</italic>
+        <bold>false</bold>
+       </font>
       </property>
-      <property name="maximumSize">
-       <size>
-        <width>75</width>
-        <height>36</height>
-       </size>
+      <property name="styleSheet">
+       <string notr="true">font: 11pt &quot;Zeniq&quot;;</string>
       </property>
       <property name="text">
-       <string>镜像管理</string>
+       <string>Docker</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="btn3">
-      <property name="minimumSize">
-       <size>
-        <width>75</width>
-        <height>36</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>75</width>
-        <height>36</height>
-       </size>
+     <widget class="QPushButton" name="menu_ftp">
+      <property name="styleSheet">
+       <string notr="true">font: 11pt &quot;Zeniq&quot;;</string>
       </property>
       <property name="text">
-       <string>仓库</string>
+       <string>Ftp</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="btn4">
-      <property name="minimumSize">
-       <size>
-        <width>75</width>
-        <height>36</height>
-       </size>
-      </property>
-      <property name="maximumSize">
-       <size>
-        <width>75</width>
-        <height>36</height>
-       </size>
+     <widget class="QPushButton" name="menu_sql">
+      <property name="styleSheet">
+       <string notr="true">font: 11pt &quot;Zeniq&quot;;</string>
       </property>
       <property name="text">
-       <string>镜像导出</string>
+       <string>数据库</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="menu_programming">
+      <property name="styleSheet">
+       <string notr="true">font: 11pt &quot;Zeniq&quot;;</string>
+      </property>
+      <property name="text">
+       <string>编程环境</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="menu_software">
+      <property name="styleSheet">
+       <string notr="true">font: 11pt &quot;Zeniq&quot;;</string>
+      </property>
+      <property name="text">
+       <string>软件安装</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="menu_setting">
+      <property name="styleSheet">
+       <string notr="true">font: 11pt &quot;Zeniq&quot;;</string>
+      </property>
+      <property name="text">
+       <string>设置</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
       </property>
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QWidget" name="left_menu" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>60</y>
+     <width>140</width>
+     <height>411</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2"/>
   </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

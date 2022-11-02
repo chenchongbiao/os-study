@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 
 #include "menubutton.h"
 
@@ -26,13 +27,15 @@ private:
 
 private:
     Ui::Widget *ui;
-    QList<MenuButton *> menuList;
-    QWidget *menuWidget;
-    QHBoxLayout *menuWidgetLayout;
-    MenuButton *btn1;
-    MenuButton *btn2;
-    MenuButton *btn3;
-    MenuButton *btn4;
+    QList<MenuButton *> topMenuList;
+    QList<MenuButton *> leftMenuList;
+    QWidget *topMenuWidget;
+    QHBoxLayout *topMenuWidgetLayout;
+    QWidget *leftMenuWidget;
+    QVBoxLayout *leftMenuWidgetLayout;
+    MenuButton *btn1,*btn2,*btn3,*btn4;
+    MenuButton *menuDocker,*menuFtp,*menuHome,*menuProgram,*menuSetting,*menuSoftware,*menuSql;
+
 };
 
 #endif // WIDGET_H
