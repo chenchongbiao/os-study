@@ -51,10 +51,10 @@ void Widget::initUI()
 
 void Widget::buttonClick()
 {
-    MenuButton *b = (MenuButton *)sender();
-    qDebug() << "当前按下" << b->text();
+    MenuButton *curBtn = (MenuButton *)sender();
+    qDebug() << "当前按下" << curBtn->text();
     for (int i = 0; i < menuList.count(); i++) {
         MenuButton *btn = menuList.at(i);
-        btn->setChecked(b == btn);
+        btn->setChecked(curBtn == btn);
     }
 }
