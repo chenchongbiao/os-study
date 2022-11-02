@@ -29,12 +29,16 @@ private:
     Ui::Widget *ui;
     QList<MenuButton *> topMenuList;
     QList<MenuButton *> leftMenuList;
+    QList<QPushButton *> rightMenuList;
     QWidget *topMenuWidget;
-    QHBoxLayout *topMenuWidgetLayout;
     QWidget *leftMenuWidget;
+    QWidget *rightMenuWidget;
+    QHBoxLayout *topMenuWidgetLayout;
     QVBoxLayout *leftMenuWidgetLayout;
+    QVBoxLayout *rightMenuWidgetLayout;
     MenuButton *btn1,*btn2,*btn3,*btn4;
     MenuButton *menuDocker,*menuFtp,*menuHome,*menuProgram,*menuSetting,*menuSoftware,*menuSql;
+    QPushButton *rbt1,*rbt2,*rbt3,*rbt4,*rbt5,*rbt6,*rbt7;
 
 };
 

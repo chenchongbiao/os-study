@@ -155,6 +155,17 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2"/>
   </widget>
+  <widget class="QWidget" name="right_menu" native="true">
+   <property name="geometry">
+    <rect>
+     <x>460</x>
+     <y>60</y>
+     <width>140</width>
+     <height>411</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_3"/>
+  </widget>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

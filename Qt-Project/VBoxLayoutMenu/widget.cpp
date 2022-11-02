@@ -20,6 +20,7 @@ Widget::~Widget()
 
 void Widget::initUI()
 {
+    // 顶部菜单
     const int width = 90;
     const int height = 50;
     QColor normalTextColor = QColor("#252525");
@@ -75,7 +76,7 @@ void Widget::initUI()
     btn1->setChecked(true);
 
 
-
+    // 左侧菜单
     QFont font;
     font.setFamily(QString::fromUtf8("Zeniq"));
     font.setPointSize(11);
@@ -90,7 +91,7 @@ void Widget::initUI()
 
     leftMenuWidgetLayout = new QVBoxLayout(leftMenuWidget);
     leftMenuWidgetLayout->setSpacing(6);
-    leftMenuWidgetLayout->setContentsMargins(11, 11, 11, 11);
+//    leftMenuWidgetLayout->setContentsMargins(11, 11, 11, 11);
 
     menuHome = new MenuButton(leftMenuWidget);
     menuHome->setText("首页");
@@ -126,8 +127,7 @@ void Widget::initUI()
     for (int i=0;i < leftMenuList.count();i++)
     {
         MenuButton *btn = leftMenuList.at(i);
-//        btn->setStyleSheet("border: 0px; border-radius: 5; border: 0px;");
-        btn->setFlat(true);
+        btn->setStyleSheet("color: #FFFFFF;  background-color: #0081ff; border-radius: 8; border: 0px; height: 35px;");
         btn->setPaddingLeft(0);
         btn->setTextAlign(MenuButton::TextAlign_Center);
         btn->setLinePosition(MenuButton::LinePosition_Top);
@@ -144,6 +144,65 @@ void Widget::initUI()
             for (int i = 0; i < leftMenuList.count(); i++) {
                 MenuButton *btn = leftMenuList.at(i);
                 btn->setChecked(curBtn == btn);
+            }
+        });
+    }
+
+    // 右侧菜单
+    int rightMenuBtnWidth = 125;
+    int rightMenuHeight = 35;
+
+    rightMenuWidget = new QWidget(ui->right_menu);
+    rightMenuWidget->resize(140,330);
+    rightMenuWidgetLayout = new QVBoxLayout(rightMenuWidget);
+    rightMenuWidgetLayout->setSpacing(6);  // 上下控件距离
+
+    rbt1 = new QPushButton(rightMenuWidget);
+    rbt1->setText("首页");
+    rbt1->resize(rightMenuBtnWidth,rightMenuHeight);
+    rightMenuWidgetLayout->addWidget(rbt1);
+
+    rbt2 = new QPushButton(rightMenuWidget);
+    rbt2->setText("Docker");
+    rightMenuWidgetLayout->addWidget(rbt2);
+
+    rbt3 = new QPushButton(rightMenuWidget);
+    rbt3->setText("Ftp");
+    rightMenuWidgetLayout->addWidget(rbt3);
+
+    rbt4 = new QPushButton(rightMenuWidget);
+    rbt4->setText("数据库");
+    rightMenuWidgetLayout->addWidget(rbt4);
+
+    rbt5 = new QPushButton(rightMenuWidget);
+    rbt5->setText("编程环境");
+    rightMenuWidgetLayout->addWidget(rbt5);
+
+    rbt6 = new QPushButton(rightMenuWidget);
+    rbt6->setText("软件安装");
+    rightMenuWidgetLayout->addWidget(rbt6);
+
+    rbt7 = new QPushButton(rightMenuWidget);
+    rbt7->setText("设置");
+    rightMenuWidgetLayout->addWidget(rbt7);
+
+    rightMenuList << rbt1 << rbt2 << rbt3 << rbt4 << rbt5 << rbt6 << rbt7;
+    for (int i=0;i < leftMenuList.count();i++)
+    {
+        QPushButton *btn = rightMenuList.at(i);
+        btn->setStyleSheet("border-radius: 8; border: 0px;");
+
+        connect(btn, &MenuButton::clicked, this, [=](){
+            QPushButton *curBtn = (QPushButton *)sender();  // 槽函数中调用sender函数，返回指向发送信号的对象的指针
+            qDebug() << "当前按下" << curBtn->text();
+            for (int i = 0; i < rightMenuList.count(); i++) {
+                QPushButton *btn = rightMenuList.at(i);
+                if (curBtn == btn)
+                {
+                    btn->setStyleSheet("color: #FFFFFF;  background-color: #0081ff; border-radius: 8; border: 0px;height: 35px;");
+                } else {
+                    btn->setStyleSheet("color: #252525; border-radius: 8; border: 0px;");
+                }
             }
         });
     }

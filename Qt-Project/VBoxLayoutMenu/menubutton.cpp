@@ -17,6 +17,8 @@ MenuButton::MenuButton(QWidget *parent) : QPushButton(parent)
     checkTextColor = QColor(255, 255, 255);
 
     setCheckable(true);
+
+//    this->setStyleSheet("border-radius: 3;");
 }
 
 void MenuButton::paintEvent(QPaintEvent *)
