@@ -32,6 +32,7 @@ private:
     MenuButton *btn1;
     MenuButton *btn2;
     MenuButton *btn3;
+    MenuButton *btn4;
 };
 
 #endif // WIDGET_H
