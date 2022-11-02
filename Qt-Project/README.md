@@ -141,7 +141,7 @@ Qt的元对象系统是一个基于标准C++的扩展，为Qt提供了3个重要
 
 # UOS程序启动器
 
-项目名starter-demo
+项目名：starter-demo
 
 # 文件操作
 
