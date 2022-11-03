@@ -191,18 +191,14 @@ void Widget::initUI()
     {
         QPushButton *btn = rightMenuList.at(i);
         btn->setStyleSheet("border-radius: 8; border: 0px;");
+        checkMenu(btn,false);
 
         connect(btn, &MenuButton::clicked, this, [=](){
             QPushButton *curBtn = (QPushButton *)sender();  // 槽函数中调用sender函数，返回指向发送信号的对象的指针
             qDebug() << "当前按下" << curBtn->text();
             for (int i = 0; i < rightMenuList.count(); i++) {
                 QPushButton *btn = rightMenuList.at(i);
-                if (curBtn == btn)
-                {
-                    btn->setStyleSheet("color: #FFFFFF;  background-color: #0081ff; border-radius: 8; border: 0px;height: 35px;");
-                } else {
-                    btn->setStyleSheet("color: #252525; border-radius: 8; border: 0px;");
-                }
+                checkMenu(btn,curBtn == btn);
             }
         });
     }
@@ -216,5 +212,15 @@ void Widget::buttonClick()
     for (int i = 0; i < topMenuList.count(); i++) {
         MenuButton *btn = topMenuList.at(i);
         btn->setChecked(curBtn == btn);
+    }
+}
+
+void Widget::checkMenu(QPushButton *btn,bool isCheck)
+{
+    if (isCheck)
+    {
+        btn->setStyleSheet("color: #FFFFFF;  background-color: #0081ff; border-radius: 5; border: 0px; height: 45px;");
+    } else {
+        btn->setStyleSheet("color: #252525; border-radius: 5; border: 0px; height: 45px;");
     }
 }

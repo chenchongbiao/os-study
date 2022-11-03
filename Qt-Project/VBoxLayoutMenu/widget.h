@@ -18,6 +18,7 @@ class Widget : public QWidget
 public:
     explicit Widget(QWidget *parent = nullptr);
     ~Widget();
+    void checkMenu(QPushButton *btn, bool isCheck);
 
 private slots:
     void buttonClick();
