@@ -6,6 +6,13 @@ TARGET = ListWidget-demo
 TEMPLATE = app
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+    widget.cpp
 
 RESOURCES +=         resources.qrc
+
+FORMS += \
+    widget.ui
+
+HEADERS += \
+    widget.h
