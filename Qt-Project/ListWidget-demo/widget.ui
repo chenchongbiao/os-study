@@ -35,7 +35,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QListWidget" name="listWidget">
+  <widget class="QListWidget" name="dockerListWdg">
    <property name="geometry">
     <rect>
      <x>0</x>
