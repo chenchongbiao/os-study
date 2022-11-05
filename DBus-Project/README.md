@@ -1,3 +1,7 @@
+# # dbus仓库
+
+[https://github.com/godbus/dbus/](https://github.com/godbus/dbus/)
+
 # DBus相关例子记录
 
 ## polkit-qt
@@ -31,3 +35,9 @@ replace github.com/linuxdeepin/go-lib => /home/bluesky/go/pkg/mod/github.com/lin
 ## 方法二
 
 不使用go mod在，shell中使用export GO111MODULE=off，go mod进行关闭，然后将go-lib源码下载到，$GOPATH/src/github.com/linuxdeepin/go-lib下，依赖go-lib的项目也不要使用go mod进行管理。代码执行的时候可以引入go-lib了。
+
+# go-dbus-factory
+
+方便的GO绑定代码，用于自动生成DBUS服务。
+
+仓库链接：[https://github.com/linuxdeepin/go-dbus-factory](https://github.com/linuxdeepin/go-dbus-factory)
