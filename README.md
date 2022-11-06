@@ -172,6 +172,6 @@ dde-daemon dbus API:
 
 ## go-lib
 
-为glib, gettext, archive, graphic,etc提供go的轻量级线程案例
+Deepin GoLang 库是一个包含许多有用的 go 例程的库，用于 glib、gettext、存档、图形等。
 
 仓库链接：[https://github.com/linuxdeepin/go-lib](https://github.com/linuxdeepin/go-lib)
