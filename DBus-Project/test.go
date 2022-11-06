@@ -71,15 +71,3 @@ func main() {
 
 	service.Wait()
 }
-
-// 拉取镜像
-// func pullImage() {
-// 	ctx := context.Background()
-
-// 	reader, err := cli.ImagePull(ctx, imageName, types.ImagePullOptions{})
-// 	if err != nil {
-// 		log.Fatal("pull image error", err)
-// 	}
-
-// 	io.Copy(os.Stdout, reader)
-// }
