@@ -1,4 +1,4 @@
-# # dbus仓库
+# dbus仓库
 
 [https://github.com/godbus/dbus/](https://github.com/godbus/dbus/)
 
@@ -41,3 +41,7 @@ replace github.com/linuxdeepin/go-lib => /home/bluesky/go/pkg/mod/github.com/lin
 方便的GO绑定代码，用于自动生成DBUS服务。
 
 仓库链接：[https://github.com/linuxdeepin/go-dbus-factory](https://github.com/linuxdeepin/go-dbus-factory)
+
+# DBus-Docker
+
+介绍：使用docker的go语言接口调用docker的api，并使用dbus将服务注册到sessionbus中，方便其他进程进行调用。
