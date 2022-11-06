@@ -159,3 +159,19 @@ dde-daemon dbus API:
 * lastore-daemon: 应用商店的核心部分，主要负责所有软件的安装程序的下载、哈希安全校验、依赖分析、本地缓存管理、软件安装、软件卸载和软件升级等工作，这个守护进程会和深度的软件仓库智能的通信，在后台保障整个操作系统应用的更新和安全守护。lastore-daemon同时会在 apt/dpkg 程序中加入钩子，不论用户是从应用商店还是终端中安装的程序都会被商店守护进程管理和保护，避免一些高级用户从终端安装以后把系统的依赖弄坏
 * lastore-session-helper: 上面说的lastore-daemon默认就会有超级权限以进行软件包的管理，但是一些普通的用户会话级的操作，比如安装成功以后通过右上角通知提醒用户，本地化管理这些操作都是不需要超级权限的，为了最小化超级权限代码的执行范围，最大程度保证用户安装软件的安全，开发者就从　lastore-daemon 中剥离了这部分代码放到lastore-session-helper中以普通权限来执行
 * deepin-appstore: 这个就是大家上面看到客户端部分的代码，简单来说就是一个CEF框架基础上构建的应用程序壳，处理客户端本地的用户交互然后嵌入一个网页，商店的服务器一旦更新了新的软件后，就会通知deepin-appstore进行页面刷新。还包括评论、评分等操作的界面接口。从技术的角度来形容，deepin-appstore就是一个具有本地客户端操作和样子的简易浏览器
+
+# linuxdeepin仓库
+
+链接：[https://github.com/linuxdeepin](https://github.com/linuxdeepin)
+
+## go-dbus-factory
+
+方便的GO绑定代码，用于自动生成DBUS服务。
+
+仓库链接：[https://github.com/linuxdeepin/go-dbus-factory](https://github.com/linuxdeepin/go-dbus-factory)
+
+## go-lib
+
+为glib, gettext, archive, graphic,etc提供go的轻量级线程案例
+
+仓库链接：[https://github.com/linuxdeepin/go-lib](https://github.com/linuxdeepin/go-lib)
