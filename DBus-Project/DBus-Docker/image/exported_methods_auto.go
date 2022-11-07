@@ -7,8 +7,14 @@ import (
 func (image *Image) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
-			Name:    "Pull",
-			Fn:      image.Pull,
+			Name:    "PullImage",
+			Fn:      image.PullImage,
+			InArgs:  []string{"img"},
+			OutArgs: []string{"result"},
+		},
+		{
+			Name:    "PullPrivateImage",
+			Fn:      image.PullPrivateImage,
 			InArgs:  []string{"img", "user", "password"},
 			OutArgs: []string{"result"},
 		},

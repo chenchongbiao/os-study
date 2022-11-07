@@ -6,7 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -26,7 +25,7 @@ const (
 )
 
 var (
-// cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost("tcp://localhost:2375"))
+	cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost("tcp://localhost:2375"))
 )
 
 type Image struct {
@@ -56,8 +55,20 @@ func NewImage(service *dbusutil.Service, cli *client.Client, ctx context.Context
 	}
 	return &image
 }
+func (image *Image) PullImage(img string) (result string, busErr *dbus.Error) {
+	reader, err := image.cli.ImagePull(image.ctx, img, types.ImagePullOptions{})
+	if err != nil {
+		result = "镜像拉取错误"
+		fmt.Println(result, err)
+		return result, nil
+	}
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(reader)
+	result = buf.String()
+	return result, nil
+}
 
-func (image *Image) Pull(img, user, password string) (result string, busErr *dbus.Error) {
+func (image *Image) PullPrivateImage(img, user, password string) (result string, busErr *dbus.Error) {
 	authConfig := types.AuthConfig{
 		Username: user,
 		Password: password,
@@ -67,11 +78,11 @@ func (image *Image) Pull(img, user, password string) (result string, busErr *dbu
 	reader, err := image.cli.ImagePull(image.ctx, img, types.ImagePullOptions{RegistryAuth: authStr})
 	reader.Close()
 	if err != nil {
-		log.Fatal("镜像拉取失败 ", err.Error())
+		result = "镜像拉取错误"
+		fmt.Println(result, err)
 	}
 	buf := new(bytes.Buffer)
-	_, _ = buf.ReadFrom(reader)
+	buf.ReadFrom(reader)
 	result = buf.String()
-	// result = "1111"
 	return result, nil
 }
