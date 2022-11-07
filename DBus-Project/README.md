@@ -42,6 +42,25 @@ replace github.com/linuxdeepin/go-lib => /home/bluesky/go/pkg/mod/github.com/lin
 
 仓库链接：[https://github.com/linuxdeepin/go-dbus-factory](https://github.com/linuxdeepin/go-dbus-factory)
 
+在项目根目录执行命令，生成构成器。
+
+先关闭go mod管理 ，构建过程缺失的库，根据提示补齐。
+
+```bash
+GO111MODULE=off
+```
+
+```bash
+make bin
+```
+
+尝试编译结果报错
+
+```bash
+/usr/local/go/pkg/tool/linux_amd64/link: running gcc failed: exit status 1
+```
+
+
 # DBus-Docker
 
 介绍：使用docker的go语言接口调用docker的api，并使用dbus将服务注册到sessionbus中，方便其他进程进行调用。
