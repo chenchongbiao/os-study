@@ -15,8 +15,8 @@ sudo sed -i "s@/usr/bin/dockerd@$str@" /usr/lib/systemd/system/docker.service
 sudo systemctl daemon-reload && systemctl restart docker
 */
 const (
-	dbusPath        = "/com/bluesky/daemon/mdocker/Container"
-	dbusServiceName = "com.bluesky.daemon.mdocker.Container"
+	dbusPath        = "/com/bluesky/docker/Container"
+	dbusServiceName = "com.bluesky.docker.Container"
 	dbusInterface   = dbusServiceName
 )
 
