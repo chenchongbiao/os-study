@@ -16,8 +16,7 @@ import (
 /*
 str="/usr/bin/dockerd -H tcp://localhost:2375 -H unix:///var/run/docker.sock "
 sudo sed -i "s@/usr/bin/dockerd@$str@" /usr/lib/systemd/system/docker.service
-systemctl daemon-reload
-systemctl restart docker
+sudo systemctl daemon-reload && systemctl restart docker
 */
 
 var (
@@ -46,6 +45,7 @@ func (o *Obj) GetInterfaceName() string {
 func main() {
 	service, err := dbusutil.NewSessionService()
 	obj := &Obj{}
+	fmt.Println(service)
 	err = service.Export("/p1/p2/p3", obj)
 	err = service.RequestName("p1.p2.p3")
 	fmt.Println(err)
