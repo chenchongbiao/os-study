@@ -22,7 +22,6 @@ const (
 
 var (
 	cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost("tcp://localhost:2375"))
-
 	// imageName     = "docker.io/busybox"
 	// containerID   = ""
 	// containerName = "busybox-test"
