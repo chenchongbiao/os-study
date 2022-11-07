@@ -1,6 +1,7 @@
 package image
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/docker/docker/client"
@@ -14,9 +15,9 @@ sudo sed -i "s@/usr/bin/dockerd@$str@" /usr/lib/systemd/system/docker.service
 sudo systemctl daemon-reload && systemctl restart docker
 */
 const (
-	DbusPath        = "/com/bluesky/daemon/mdocker"
-	DbusServiceName = "com.bluesky.daemon.mdocker"
-	DbusInterface   = DbusServiceName
+	dbusPath        = "/com/bluesky/daemon/mdocker/Image"
+	dbusServiceName = "com.bluesky.daemon.mdocker.Image"
+	dbusInterface   = dbusServiceName
 )
 
 var (
@@ -28,17 +29,26 @@ var (
 )
 
 type Image struct {
-	// methods *struct {
-	// 	Pull func() `out:"result"`
-	// }
+	service *dbusutil.Service
 }
 
 func (image *Image) GetInterfaceName() string {
-	return DbusInterface
+	return dbusServiceName
 }
 
 func NewImage(service *dbusutil.Service) *Image {
-	image := Image{}
+	image := Image{
+		service: service,
+	}
+	err = service.Export(dbusPath, &image)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = service.RequestName(dbusServiceName)
+	if err != nil {
+		fmt.Println(err)
+	}
 	return &image
 }
 
