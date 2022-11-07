@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"./container"
 	"./image"
 	"github.com/docker/docker/client"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -25,8 +26,8 @@ var (
 func main() {
 	service, err := dbusutil.NewSessionService()
 	mimage := image.NewImage(service)
-	// err = service.Export("/com/bluesky/daemon/mdocker", mimage)
-	// err = service.RequestName("com.bluesky.daemon.mdocker")
+	mcontainer := container.NewContainer(service)
 	fmt.Println(mimage, err)
+	fmt.Println(mcontainer, err)
 	service.Wait()
 }
