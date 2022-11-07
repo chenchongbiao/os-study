@@ -9,6 +9,7 @@ func (image *Image) GetExportedMethods() dbusutil.ExportedMethods {
 		{
 			Name:    "Pull",
 			Fn:      image.Pull,
+			InArgs:  []string{"img", "user", "password"},
 			OutArgs: []string{"result"},
 		},
 	}

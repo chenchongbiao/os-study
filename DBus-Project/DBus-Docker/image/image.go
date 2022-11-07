@@ -1,9 +1,14 @@
 package image
 
 import (
+	"bytes"
+	"context"
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"log"
 
+	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -15,31 +20,32 @@ sudo sed -i "s@/usr/bin/dockerd@$str@" /usr/lib/systemd/system/docker.service
 sudo systemctl daemon-reload && systemctl restart docker
 */
 const (
-	dbusPath        = "/com/bluesky/daemon/mdocker/Image"
-	dbusServiceName = "com.bluesky.daemon.mdocker.Image"
+	dbusPath        = "/com/bluesky/docker/Image"
+	dbusServiceName = "com.bluesky.docker.Image"
 	dbusInterface   = dbusServiceName
 )
 
 var (
-	cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost("tcp://localhost:2375"))
-	// imageName     = "docker.io/busybox"
-	// containerID   = ""
-	// containerName = "busybox-test"
+// cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost("tcp://localhost:2375"))
 )
 
 type Image struct {
 	service *dbusutil.Service
+	cli     *client.Client
+	ctx     context.Context
 }
 
 func (image *Image) GetInterfaceName() string {
 	return dbusServiceName
 }
 
-func NewImage(service *dbusutil.Service) *Image {
+func NewImage(service *dbusutil.Service, cli *client.Client, ctx context.Context) *Image {
 	image := Image{
 		service: service,
+		cli:     cli,
+		ctx:     ctx,
 	}
-	err = service.Export(dbusPath, &image)
+	err := service.Export(dbusPath, &image)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -51,14 +57,21 @@ func NewImage(service *dbusutil.Service) *Image {
 	return &image
 }
 
-func (image *Image) Pull() (result string, err *dbus.Error) {
-	// out, err := cli.ImagePull(image.Context, image.ImageName, image.ImagePullOptions)
-	if err != nil {
-		log.Fatal("image pull error ", err.Error())
+func (image *Image) Pull(img, user, password string) (result string, busErr *dbus.Error) {
+	authConfig := types.AuthConfig{
+		Username: user,
+		Password: password,
 	}
-	// defer out.Close()
-	// io.Copy(os.Stdout, out)
-	result = "1111"
-	err = nil
-	return result, err
+	encodedJson, _ := json.Marshal(authConfig)
+	authStr := base64.URLEncoding.EncodeToString(encodedJson)
+	reader, err := image.cli.ImagePull(image.ctx, img, types.ImagePullOptions{RegistryAuth: authStr})
+	reader.Close()
+	if err != nil {
+		log.Fatal("镜像拉取失败 ", err.Error())
+	}
+	buf := new(bytes.Buffer)
+	_, _ = buf.ReadFrom(reader)
+	result = buf.String()
+	// result = "1111"
+	return result, nil
 }
