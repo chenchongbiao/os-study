@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"./container"
@@ -24,10 +25,11 @@ var (
 )
 
 func main() {
+	ctx := context.Background()
 	service, err := dbusutil.NewSessionService()
-	mimage := image.NewImage(service)
-	mcontainer := container.NewContainer(service)
-	fmt.Println(mimage, err)
-	fmt.Println(mcontainer, err)
+	img := image.NewImage(service, cli, ctx)
+	con := container.NewContainer(service)
+	fmt.Println(img, err)
+	fmt.Println(con, err)
 	service.Wait()
 }
