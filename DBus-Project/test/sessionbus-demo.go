@@ -1,9 +1,10 @@
-// package main
+package main
 
 import (
 	"fmt"
 	"os"
 
+	"github.com/docker/docker/client"
 	"github.com/godbus/dbus"
 	"github.com/godbus/dbus/introspect"
 )
@@ -29,7 +30,7 @@ func main() {
 		panic(err)
 	}
 	defer conn.Close()
-
+	cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost("tcp://localhost:2375"))
 	f := foo("Bar!")
 	conn.Export(f, "/com/github/guelfey/Demo", "com.github.guelfey.Demo")
 	conn.Export(introspect.Introspectable(intro), "/com/github/guelfey/Demo",
