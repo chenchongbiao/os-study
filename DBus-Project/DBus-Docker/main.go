@@ -25,8 +25,8 @@ var (
 func main() {
 	service, err := dbusutil.NewSessionService()
 	mimage := image.NewImage(service)
-	err = service.Export("/com/bluesky/daemon/mdocker", mimage)
-	err = service.RequestName("com.bluesky.daemon.mdocker")
-	fmt.Println(err)
+	// err = service.Export("/com/bluesky/daemon/mdocker", mimage)
+	// err = service.RequestName("com.bluesky.daemon.mdocker")
+	fmt.Println(mimage, err)
 	service.Wait()
 }
