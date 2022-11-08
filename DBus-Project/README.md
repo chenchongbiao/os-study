@@ -60,7 +60,16 @@ make bin
 /usr/local/go/pkg/tool/linux_amd64/link: running gcc failed: exit status 1
 ```
 
-
 # DBus-Docker
 
 介绍：使用docker的go语言接口调用docker的api，并使用dbus将服务注册到sessionbus中，方便其他进程进行调用。
+
+技术点：godbus、Docker-SDK-Go、sqlite、go-lib
+
+参考：
+
+[Docker SDK使用指南](https://blog.csdn.net/SHELLCODE_8BIT/article/details/126429362?spm=1001.2101.3001.6650.1&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EYuanLiJiHua%7EPosition-1-126429362-blog-125198200.pc_relevant_multi_platform_whitelistv3&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EYuanLiJiHua%7EPosition-1-126429362-blog-125198200.pc_relevant_multi_platform_whitelistv3&utm_relevant_index=1)
+
+[使用Docker的API及SDK](https://blog.csdn.net/qq_44846324/article/details/125198200?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166778178716782412533759%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fblog.%2522%257D&request_id=166778178716782412533759&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~blog~first_rank_ecpm_v1~rank_v31_ecpm-1-125198200-null-null.nonecase&utm_term=%E4%BD%BF%E7%94%A8docker%E7%9A%84api%E5%92%8Csdk&spm=1018.2226.3001.4450)
+
+[Dockore 一个简单、便捷、开箱即用的Docker GUI客户端。](https://github.com/HsOjo/Dockore)
