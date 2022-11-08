@@ -2,6 +2,7 @@ package image
 
 import (
 	"context"
+	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
@@ -14,11 +15,13 @@ import (
 
 type ImageService struct {
 	cli *client.Client
+	db  *sql.DB
 }
 
-func InitService(cli *client.Client) *ImageService {
+func InitService(cli *client.Client, db *sql.DB) *ImageService {
 	imgService := ImageService{
 		cli: cli,
+		db:  db,
 	}
 	return &imgService
 }
