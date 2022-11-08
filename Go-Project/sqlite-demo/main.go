@@ -15,6 +15,13 @@ import (
 var ()
 
 func main() {
+	TcpUrl := "tcp://localhost:2375"
+	cli, err := client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost(TcpUrl))
+	if err != nil {
+		fmt.Println("client初始化失败", err)
+		return
+	}
+
 	db, err := initDatabase()
 	if err != nil {
 		fmt.Println("数据库初始化失败", err)
@@ -23,12 +30,14 @@ func main() {
 
 	fmt.Println("数据库初始化")
 	image.InitDB(db)
+
 	// stmt, err := db.Prepare("INSERT INTO image(username, departname, created) values(?,?,?)")
 	// printErr(err)
 	// res, err := stmt.Exec("wangshubo", "国务院", "2017-04-21")
 	// printErr(err)
 	// fmt.Println(res)
-
+	imgService := image.InitService(cli, db)
+	imgService.GetImageList()
 	// rows, err := db.Query("SELECT * FROM image")
 	// printErr(err)
 	// var uid int
