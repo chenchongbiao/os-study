@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
 
 	"github.com/docker/docker/api/types"
@@ -32,18 +33,16 @@ var (
 type Image struct {
 	service *dbusutil.Service
 	cli     *client.Client
-	ctx     context.Context
 }
 
 func (image *Image) GetInterfaceName() string {
 	return dbusServiceName
 }
 
-func NewImage(service *dbusutil.Service, cli *client.Client, ctx context.Context) *Image {
+func NewImage(service *dbusutil.Service, cli *client.Client) *Image {
 	image := Image{
 		service: service,
 		cli:     cli,
-		ctx:     ctx,
 	}
 	err := service.Export(dbusPath, &image)
 	if err != nil {
@@ -57,7 +56,8 @@ func NewImage(service *dbusutil.Service, cli *client.Client, ctx context.Context
 	return &image
 }
 func (image *Image) PullImage(img string) (result string, busErr *dbus.Error) {
-	out, err := image.cli.ImagePull(image.ctx, img, types.ImagePullOptions{})
+	ctx := context.Background()
+	out, err := image.cli.ImagePull(ctx, img, types.ImagePullOptions{})
 	if err != nil {
 		result = "镜像拉取失败\n" + err.Error()
 		fmt.Println(result, err)
@@ -69,13 +69,14 @@ func (image *Image) PullImage(img string) (result string, busErr *dbus.Error) {
 }
 
 func (image *Image) PullPrivateImage(img, user, password string) (result string, busErr *dbus.Error) {
+	ctx := context.Background()
 	authConfig := types.AuthConfig{
 		Username: user,
 		Password: password,
 	}
 	encodedJson, _ := json.Marshal(authConfig)
 	authStr := base64.URLEncoding.EncodeToString(encodedJson)
-	out, err := image.cli.ImagePull(image.ctx, img, types.ImagePullOptions{RegistryAuth: authStr})
+	out, err := image.cli.ImagePull(ctx, img, types.ImagePullOptions{RegistryAuth: authStr})
 	out.Close()
 	if err != nil {
 		result = "镜像拉取失败\n" + err.Error()
@@ -83,5 +84,18 @@ func (image *Image) PullPrivateImage(img, user, password string) (result string,
 	}
 	io.Copy(os.Stdout, out)
 	result = "镜像拉取成功"
+	return result, nil
+}
+
+func (image *Image) ImageList() (result string, busErr *dbus.Error) {
+	ctx := context.Background()
+	images, err := cli.ImageList(ctx, types.ImageListOptions{All: true})
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	list, _ := json.Marshal(images)
+	fmt.Println(string(list))
+	fmt.Println("image size:", len(images))
 	return result, nil
 }
