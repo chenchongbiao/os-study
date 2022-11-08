@@ -10,7 +10,6 @@ import (
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
-	"github.com/godbus/dbus"
 )
 
 type ImageService struct {
@@ -37,7 +36,7 @@ func (i *ImageService) PullImage(img string) (result string, err error) {
 	return result, err
 }
 
-func (i *ImageService) PullPrivateImage(img, user, password string) (result string, busErr *dbus.Error) {
+func (i *ImageService) PullPrivateImage(img, user, password string) (result string, err error) {
 	ctx := context.Background()
 	authConfig := types.AuthConfig{
 		Username: user,
@@ -53,5 +52,25 @@ func (i *ImageService) PullPrivateImage(img, user, password string) (result stri
 	}
 	io.Copy(os.Stdout, out)
 	result = "镜像拉取成功"
-	return result, nil
+	return result, err
+}
+
+func (i *ImageService) GetImageList() (result string, err error) {
+	ctx := context.Background()
+	images, err := i.cli.ImageList(ctx, types.ImageListOptions{All: true})
+	if err != nil {
+		fmt.Println(err)
+		result = "获取镜像列表失败"
+		return
+	}
+	for _, image := range images {
+		// fmt.Println(image)
+		fmt.Println("ID", image.ID[7:19])
+		fmt.Println("Tags", image.RepoTags)
+		fmt.Println("Sizev", image.Size)         // 字节转换
+		fmt.Println("CreateTime", image.Created) // 时间戳
+		break
+	}
+	result = "获取镜像列表成功"
+	return result, err
 }
