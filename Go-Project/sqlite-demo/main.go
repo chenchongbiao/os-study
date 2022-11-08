@@ -15,8 +15,13 @@ import (
 var ()
 
 func main() {
-	db := initDatabase()
-	fmt.Println("数据库初始化", db)
+	db, err := initDatabase()
+	if err != nil {
+		fmt.Println("数据库初始化失败", err)
+		return
+	}
+
+	fmt.Println("数据库初始化")
 	image.InitDB(db)
 	// stmt, err := db.Prepare("INSERT INTO image(username, departname, created) values(?,?,?)")
 	// printErr(err)
@@ -40,7 +45,7 @@ func main() {
 	// 	fmt.Println(created)
 	// }
 }
-func initDatabase() *sql.DB {
+func initDatabase() (*sql.DB, error) {
 	Host := "tcp://localhost:2375"
 	_, err := client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost(Host))
 	printErr(err)
@@ -51,15 +56,14 @@ func initDatabase() *sql.DB {
 	dbusDockerDir := u.HomeDir + "/.config/dbus-docker/data"
 
 	if !isExist(dbusDockerDir) {
-		err = os.Mkdir(dbusDockerDir, 0700)
+		err = os.MkdirAll(dbusDockerDir, 0700)
 		printErr(err)
 	}
 
 	//打开数据库，如果不存在，则创建
 	dbPath := dbusDockerDir + "/db.sqlite"
 	db, err := sql.Open("sqlite3", dbPath)
-	printErr(err)
-	return db
+	return db, err
 }
 
 func isExist(path string) bool {
