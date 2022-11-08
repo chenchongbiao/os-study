@@ -1,11 +1,12 @@
 package image
 
 import (
-	"bytes"
 	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
+	"os"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
@@ -56,15 +57,14 @@ func NewImage(service *dbusutil.Service, cli *client.Client, ctx context.Context
 	return &image
 }
 func (image *Image) PullImage(img string) (result string, busErr *dbus.Error) {
-	reader, err := image.cli.ImagePull(image.ctx, img, types.ImagePullOptions{})
+	out, err := image.cli.ImagePull(image.ctx, img, types.ImagePullOptions{})
 	if err != nil {
-		result = "镜像拉取错误"
+		result = "镜像拉取失败\n" + err.Error()
 		fmt.Println(result, err)
 		return result, nil
 	}
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(reader)
-	result = buf.String()
+	io.Copy(os.Stdout, out)
+	result = "镜像拉取成功"
 	return result, nil
 }
 
@@ -75,14 +75,13 @@ func (image *Image) PullPrivateImage(img, user, password string) (result string,
 	}
 	encodedJson, _ := json.Marshal(authConfig)
 	authStr := base64.URLEncoding.EncodeToString(encodedJson)
-	reader, err := image.cli.ImagePull(image.ctx, img, types.ImagePullOptions{RegistryAuth: authStr})
-	reader.Close()
+	out, err := image.cli.ImagePull(image.ctx, img, types.ImagePullOptions{RegistryAuth: authStr})
+	out.Close()
 	if err != nil {
-		result = "镜像拉取错误"
+		result = "镜像拉取失败\n" + err.Error()
 		fmt.Println(result, err)
 	}
-	buf := new(bytes.Buffer)
-	buf.ReadFrom(reader)
-	result = buf.String()
+	io.Copy(os.Stdout, out)
+	result = "镜像拉取成功"
 	return result, nil
 }
