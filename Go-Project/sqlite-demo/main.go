@@ -15,36 +15,24 @@ import (
 var ()
 
 func main() {
-	db := initDatabase()
-	fmt.Println("数据库初始化", db)
-	image.InitDB(db)
-	// stmt, err := db.Prepare("INSERT INTO image(username, departname, created) values(?,?,?)")
-	// printErr(err)
-	// res, err := stmt.Exec("wangshubo", "国务院", "2017-04-21")
-	// printErr(err)
-	// fmt.Println(res)
-
-	// rows, err := db.Query("SELECT * FROM image")
-	// printErr(err)
-	// var uid int
-	// var username string
-	// var department string
-	// var created time.Time
-
-	// for rows.Next() {
-	// 	err = rows.Scan(&uid, &username, &department, &created)
-	// 	printErr(err)
-	// 	fmt.Println(uid)
-	// 	fmt.Println(username)
-	// 	fmt.Println(department)
-	// 	fmt.Println(created)
-	// }
-}
-func initDatabase() *sql.DB {
 	Host := "tcp://localhost:2375"
-	_, err := client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost(Host))
+	cli, err := client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost(Host))
 	printErr(err)
 
+	// db := initDatabase()
+	// fmt.Println("数据库初始化", db)
+	// img, err := image.InitDB(db)
+	// printErr(err)
+	// imageItem := image.NewImageItem("f7b038b0b2", "busybox:latest", "python", "2022-11-08", 20.23)
+	// img.Insert(imageItem)
+	imgService := image.InitService(cli)
+	result, err := imgService.PullImage("docker.io/busybox")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(result)
+}
+func initDatabase() *sql.DB {
 	u, err := user.Current()
 	printErr(err)
 
