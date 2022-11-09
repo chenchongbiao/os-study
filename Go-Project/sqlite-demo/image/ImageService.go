@@ -30,7 +30,6 @@ type ImageService struct {
 
 func InitService(cli *client.Client, db *sql.DB) *ImageService {
 	imgMapper, _ := InitDB(db)
-
 	imgService := ImageService{
 		cli:       cli,
 		imgMapper: imgMapper,
@@ -41,6 +40,7 @@ func InitService(cli *client.Client, db *sql.DB) *ImageService {
 func (i *ImageService) PullImage(img string) (result string, err error) {
 	ctx := context.Background()
 	out, err := i.cli.ImagePull(ctx, img, types.ImagePullOptions{})
+	i.GetImageList() // 更新镜像列表
 	if err != nil {
 		result = "镜像拉取失败\n" + err.Error()
 		fmt.Println(result, err)
@@ -83,24 +83,33 @@ func (i *ImageService) GetImageList() (result string, err error) {
 		var tags string
 		var size string
 		var create_time string
-		img_id = image.ID[7:]
-		rows := i.imgMapper.GetImageByImgId(img_id)
-		fmt.Printf("%#v", rows.Next())
-		for rows.Next() {
-			rows.Scan(&img_id, &tags, &size, &create_time)
-			fmt.Println(img_id, tags, size, create_time)
-		}
-		if rows == nil {
+		result := i.imgMapper.SelectImageByImgId(image.ID[7:]) // 根据镜像ID查找是否数据已有数据
+		if !result {
+			img_id = image.ID[7:]
 			tags = arrayToString(image.RepoTags)
 			size = formatImageSize(image.Size)
 			create_time = fotmatDate(image.Created)
 			tb := NewImageItem(img_id, tags, size, create_time)
 			i.imgMapper.Insert(tb)
 		}
-		break
+		// break
 	}
 	result = "获取镜像列表成功"
 	return result, err
+}
+
+func (i *ImageService) GetContainersList() {
+	containers, err := i.cli.ContainerList(context.Background(), types.ContainerListOptions{All: true})
+	if err != nil {
+		panic(err)
+	}
+
+	for _, container := range containers {
+		fmt.Printf("%s %s\n", container.ID[:10], container.Image)
+	}
+
+	cbytes, _ := json.Marshal(containers)
+	fmt.Println(string(cbytes))
 }
 
 func formatImageSize(dockerSize int64) (size string) {
