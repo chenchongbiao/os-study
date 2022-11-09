@@ -8,20 +8,32 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"time"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/client"
 )
 
+const (
+	B  = 1
+	KB = 1000
+	MB = 1000 * 1000
+	GB = 1000 * 1000 * 1000
+	TB = 1000 * 1000 * 1000 * 1000
+	EB = 1000 * 1000 * 1000 * 1000 * 1000
+)
+
 type ImageService struct {
-	cli *client.Client
-	db  *sql.DB
+	cli       *client.Client
+	imgMapper *ImageMapper
 }
 
 func InitService(cli *client.Client, db *sql.DB) *ImageService {
+	imgMapper, _ := InitDB(db)
+
 	imgService := ImageService{
-		cli: cli,
-		db:  db,
+		cli:       cli,
+		imgMapper: imgMapper,
 	}
 	return &imgService
 }
@@ -67,13 +79,56 @@ func (i *ImageService) GetImageList() (result string, err error) {
 		return
 	}
 	for _, image := range images {
-		// fmt.Println(image)
-		fmt.Println("ID", image.ID[7:19])
-		fmt.Println("Tags", image.RepoTags)
-		fmt.Println("Sizev", image.Size)         // 字节转换
-		fmt.Println("CreateTime", image.Created) // 时间戳
+		var img_id string
+		var tags string
+		var size string
+		var create_time string
+		img_id = image.ID[7:]
+		rows := i.imgMapper.GetImageByImgId(img_id)
+		fmt.Printf("%#v", rows.Next())
+		for rows.Next() {
+			rows.Scan(&img_id, &tags, &size, &create_time)
+			fmt.Println(img_id, tags, size, create_time)
+		}
+		if rows == nil {
+			tags = arrayToString(image.RepoTags)
+			size = formatImageSize(image.Size)
+			create_time = fotmatDate(image.Created)
+			tb := NewImageItem(img_id, tags, size, create_time)
+			i.imgMapper.Insert(tb)
+		}
 		break
 	}
 	result = "获取镜像列表成功"
 	return result, err
+}
+
+func formatImageSize(dockerSize int64) (size string) {
+	if dockerSize < KB {
+		return fmt.Sprintf("%.2fB", float64(dockerSize)/float64(B))
+	} else if dockerSize < (MB) {
+		return fmt.Sprintf("%.2fKB", float64(dockerSize)/float64(KB))
+	} else if dockerSize < (GB) {
+		return fmt.Sprintf("%.2fMB", float64(dockerSize)/float64(MB))
+	} else if dockerSize < (TB) {
+		return fmt.Sprintf("%.2fGB", float64(dockerSize)/float64(GB))
+	} else if dockerSize < (EB) {
+		return fmt.Sprintf("%.2fTB", float64(dockerSize)/float64(TB))
+	} else {
+		return fmt.Sprintf("%.2fEB", float64(dockerSize)/float64(EB))
+	}
+}
+
+func fotmatDate(timeStamp int64) (date string) {
+	const baseFormat = "2006-01-02"
+	t := time.Unix(timeStamp, 0)
+	return t.Format(baseFormat)
+}
+
+func arrayToString(arr []string) string {
+	var result string
+	for _, i := range arr { //遍历数组将元素追加成字符串
+		result += i + " "
+	}
+	return result
 }
