@@ -73,6 +73,8 @@ func (i *ImageService) PullPrivateImage(img, user, password string) (result stri
 func (i *ImageService) GetImageList() (result string, err error) {
 	ctx := context.Background()
 	images, err := i.cli.ImageList(ctx, types.ImageListOptions{All: true})
+	list, _ := json.Marshal(images)
+	fmt.Println("image data json", string(list))
 	if err != nil {
 		fmt.Println(err)
 		result = "获取镜像列表失败"
@@ -92,7 +94,6 @@ func (i *ImageService) GetImageList() (result string, err error) {
 			tb := NewImageItem(img_id, tags, size, create_time)
 			i.imgMapper.Insert(tb)
 		}
-		// break
 	}
 	result = "获取镜像列表成功"
 	return result, err
