@@ -28,26 +28,31 @@ func main() {
 		return
 	}
 
-	fmt.Println("数据库初始化")
-	image.InitDB(db)
+	var ch1 string
 
-	// stmt, err := db.Prepare("INSERT INTO image(username, departname, created) values(?,?,?)")
-	// printErr(err)
-	// res, err := stmt.Exec("wangshubo", "国务院", "2017-04-21")
-	// printErr(err)
-	// fmt.Println(res)
-	imgService := image.InitService(cli, db)
-	imgService.GetImageList()
-	// rows, err := db.Query("SELECT * FROM image")
-	// printErr(err)
-	// imageItem := image.NewImageItem("f7b038b0b2", "busybox:latest", "python", "2022-11-08", 20.23)
-	// img.Insert(imageItem)
-	imgService := image.InitService(cli)
-	result, err := imgService.PullImage("docker.io/busybox")
-	if err != nil {
-		fmt.Println(err)
+	for {
+		fmt.Println("1. 拉取镜像")
+		fmt.Println("2. 获取镜像列表")
+		fmt.Println("请输入数字：")
+		fmt.Scan(&ch1)
+		switch ch1 {
+		case "1":
+			imgService := image.InitService(cli, db)
+			result, _ := imgService.PullImage("docker.io/busybox")
+			fmt.Println(result)
+		case "2":
+			imgService := image.InitService(cli, db)
+			result, _ := imgService.GetImageList()
+			fmt.Println(result)
+		}
 	}
-	fmt.Println(result)
+
+	// result, err := imgService.PullImage("docker.io/busybox")
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// fmt.Println(result)
+	db.Close()
 }
 
 func initDatabase() (*sql.DB, error) {
