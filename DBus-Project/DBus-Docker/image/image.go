@@ -95,7 +95,7 @@ func (image *Image) ImageList() (result string, busErr *dbus.Error) {
 	}
 
 	list, _ := json.Marshal(images)
-	fmt.Println(string(list))
-	fmt.Println("image size:", len(images))
+	result = string(list)
+	fmt.Println(result)
 	return result, nil
 }
