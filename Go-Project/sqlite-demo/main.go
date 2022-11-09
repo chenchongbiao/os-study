@@ -15,13 +15,30 @@ import (
 var ()
 
 func main() {
-	Host := "tcp://localhost:2375"
-	cli, err := client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost(Host))
-	printErr(err)
+	TcpUrl := "tcp://localhost:2375"
+	cli, err := client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost(TcpUrl))
+	if err != nil {
+		fmt.Println("client初始化失败", err)
+		return
+	}
 
-	// db := initDatabase()
-	// fmt.Println("数据库初始化", db)
-	// img, err := image.InitDB(db)
+	db, err := initDatabase()
+	if err != nil {
+		fmt.Println("数据库初始化失败", err)
+		return
+	}
+
+	fmt.Println("数据库初始化")
+	image.InitDB(db)
+
+	// stmt, err := db.Prepare("INSERT INTO image(username, departname, created) values(?,?,?)")
+	// printErr(err)
+	// res, err := stmt.Exec("wangshubo", "国务院", "2017-04-21")
+	// printErr(err)
+	// fmt.Println(res)
+	imgService := image.InitService(cli, db)
+	imgService.GetImageList()
+	// rows, err := db.Query("SELECT * FROM image")
 	// printErr(err)
 	// imageItem := image.NewImageItem("f7b038b0b2", "busybox:latest", "python", "2022-11-08", 20.23)
 	// img.Insert(imageItem)
@@ -32,22 +49,22 @@ func main() {
 	}
 	fmt.Println(result)
 }
-func initDatabase() *sql.DB {
+
+func initDatabase() (*sql.DB, error) {
 	u, err := user.Current()
 	printErr(err)
 
 	dbusDockerDir := u.HomeDir + "/.config/dbus-docker/data"
 
 	if !isExist(dbusDockerDir) {
-		err = os.Mkdir(dbusDockerDir, 0700)
+		err = os.MkdirAll(dbusDockerDir, 0700)
 		printErr(err)
 	}
 
 	//打开数据库，如果不存在，则创建
 	dbPath := dbusDockerDir + "/db.sqlite"
 	db, err := sql.Open("sqlite3", dbPath)
-	printErr(err)
-	return db
+	return db, err
 }
 
 func isExist(path string) bool {
