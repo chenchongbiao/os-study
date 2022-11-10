@@ -41,7 +41,7 @@ private:
     DLabel *address;                     // 容器监控
     DLabel *image;                       // 容器镜像
     DLabel *port;                        // 容器端口
-    DLabel *ip;                          // 容器ip
+    DLabel *contaierId;                  // 容器id
 };
 
 #endif // WIDGET_H

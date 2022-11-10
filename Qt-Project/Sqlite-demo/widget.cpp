@@ -68,6 +68,11 @@ void widget::initUI()
     checkAllBtn->setFixedSize(height-20,height);
     columnLayout->addWidget(checkAllBtn);
 
+    contaierId = new DLabel("ID");
+    contaierId->setAlignment(Qt::AlignCenter);
+    contaierId->setFixedWidth(110);
+    columnLayout->addWidget(contaierId);
+
     name = new DLabel("容器名");
     name->setAlignment(Qt::AlignCenter);
     name->setFixedWidth(110);
@@ -93,11 +98,6 @@ void widget::initUI()
     port->setFixedWidth(110);
     columnLayout->addWidget(port);
 
-    ip = new DLabel("IP地址");
-    ip->setAlignment(Qt::AlignCenter);
-    ip->setFixedWidth(110);
-    columnLayout->addWidget(ip);
-
     /*
      * 初始化docker列表
     */
@@ -111,6 +111,11 @@ void widget::initUI()
         QRadioButton *checkBtn = new QRadioButton(ui->dockerListWdg);
         checkBtn->setFixedSize(height-20,height);
         layout->addWidget(checkBtn);
+
+        DLabel *dockerId = new DLabel("ee522ef1b774");
+        dockerId->setAlignment(Qt::AlignCenter);
+        dockerId->setFixedWidth(110);
+        layout->addWidget(dockerId);
 
         DLabel *dockerName = new DLabel("/fastosdocker");
         dockerName->setAlignment(Qt::AlignCenter);
@@ -153,10 +158,6 @@ void widget::initUI()
         dockerPort->setFixedWidth(110);
         layout->addWidget(dockerPort);
 
-        DLabel *dockerIp = new DLabel("172.17.0.2");
-        dockerIp->setAlignment(Qt::AlignCenter);
-        dockerIp->setFixedWidth(110);
-        layout->addWidget(dockerIp);
 
         QListWidgetItem *containerItem=new QListWidgetItem(ui->dockerListWdg);
         containerItem->setSizeHint(QSize(40,40));
