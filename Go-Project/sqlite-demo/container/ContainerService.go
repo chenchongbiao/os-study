@@ -3,10 +3,12 @@ package container
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/docker/docker/api/types"
-	"golang.org/x/vuln/client"
+	"github.com/docker/docker/client"
 )
 
 type ContainerService struct {
@@ -14,7 +16,7 @@ type ContainerService struct {
 	containerMapper *ContainerMapper
 }
 
-func InitService(cli *client.Client, db *sql.DB) *ContainerMapper {
+func InitService(cli *client.Client, db *sql.DB) *ContainerService {
 	containerMapper, _ := InitDB(db)
 	containerService := ContainerService{
 		cli:             cli,
@@ -31,20 +33,34 @@ func (c *ContainerService) GetContainerList() (result string, err error) {
 		result = "获取容器列表失败"
 		return
 	}
-	for _, image := range containers {
-		// var img_id string
-		// var tags string
-		// var size string
-		// var create_time string
-		// result := i.imgMapper.SelectImageByImgId(image.ID[7:]) // 根据镜像ID查找是否数据已有数据
-		// if !result {
-		// 	img_id = image.ID[7:]
-		// 	tags = arrayToString(image.RepoTags)
-		// 	size = formatImageSize(image.Size)
-		// 	create_time = fotmatDate(image.Created)
-		// 	tb := NewImageItem(img_id, tags, size, create_time)
-		// 	i.imgMapper.Insert(tb)
-		// }
+	for _, container := range containers {
+		fmt.Println("ID", container.ID)
+		fmt.Println("Names", strings.Join(container.Names, "")[1:])
+		fmt.Println("State", container.State) // running or exited
+		fmt.Println("Image", container.Image)
+		ports, _ := json.Marshal(container.Ports)
+		portsStr := string(ports)
+		fmt.Println("Ports", portsStr)
+		fmt.Println("Command", container.Command)
+		var container_id string
+		var name string
+		var state string
+		var image string
+		var port string
+		var command string
+		result := c.containerMapper.SelectContainerByImgId(container.ID) // 根据容器ID查找是否数据已有数据
+		if !result {
+			container_id = container.ID
+			name = strings.Join(container.Names, "")[1:]
+			state = container.State
+			image = container.Image
+			portsStr, _ := json.Marshal(container.Ports)
+			port = string(portsStr)
+			command = container.Command
+			tb := NewContainerItem(container_id, name, state, image, port, command)
+			c.containerMapper.Insert(tb)
+		}
+		break
 	}
 	result = "获取镜像列表成功"
 	return result, err
