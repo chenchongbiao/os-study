@@ -6,10 +6,10 @@ import (
 	"os"
 	"os/user"
 
+	"sqlite-demo/container"
 	"sqlite-demo/image"
 
 	"github.com/docker/docker/client"
-	"github.com/docker/docker/container"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -48,7 +48,8 @@ func main() {
 			fmt.Println(result)
 		case "3":
 			containerService := container.InitService(cli, db)
-
+			result, _ := containerService.GetContainerList()
+			fmt.Println(result)
 		}
 	}
 
