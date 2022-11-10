@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <DSwitchButton>
 #include <QToolButton>
+#include <QDir>
 
 #include "widget.h"
 #include "ui_widget.h"
@@ -10,6 +11,7 @@ widget::widget(QWidget *parent) :
     ui(new Ui::widget)
 {
     ui->setupUi(this);
+    initDB();
     initUI();
 }
 
@@ -164,5 +166,26 @@ void widget::initUI()
     //        WContainerItem->setToolTip(); // 提示框
         containerItem->setFlags(Qt::ItemIsSelectable); // 取消选择项
         ui->dockerListWdg->setItemWidget(containerItem,dockerWidget);  // 将dockerWidgetr赋予containerItem
+    }
+}
+
+
+void widget::initDB()
+{
+    //检测已连接的方式 - 默认连接名
+    QString dbusDockerDir = QDir::homePath()+"/.config/dbus-docker/data/db.sqlite";
+    qDebug() <<dbusDockerDir;
+    if(QSqlDatabase::contains("qt_sql_default_connection"))
+        db = QSqlDatabase::database("qt_sql_default_connection");
+    else
+        db = QSqlDatabase::addDatabase("QSQLITE");
+    //设置数据库路径，不存在则创建
+    db.setDatabaseName(dbusDockerDir);
+
+    //打开数据库
+    if(db.open()){
+        qDebug()<<"数据库打开成功";
+        //关闭数据库
+        db.close();
     }
 }

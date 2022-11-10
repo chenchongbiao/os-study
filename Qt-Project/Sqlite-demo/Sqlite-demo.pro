@@ -1,4 +1,4 @@
-QT += core gui dtkwidget
+QT += core gui dtkwidget sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -7,7 +7,8 @@ TEMPLATE = app
 
 SOURCES += \
         main.cpp \
-    widget.cpp
+    widget.cpp \
+    model/container.cpp
 
 RESOURCES +=         resources.qrc
 
@@ -15,4 +16,5 @@ FORMS += \
     widget.ui
 
 HEADERS += \
-    widget.h
+    widget.h \
+    model/container.h

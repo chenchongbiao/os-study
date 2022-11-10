@@ -7,6 +7,7 @@
 #include <DPushButton>
 #include <QRadioButton>
 #include <DLabel>
+#include <QSqlDatabase>
 
 DWIDGET_USE_NAMESPACE
 
@@ -22,6 +23,7 @@ public:
     explicit widget(QWidget *parent = nullptr);
     ~widget();
     void initUI();
+    void initDB();
 
 private:
     Ui::widget *ui;
@@ -42,6 +44,7 @@ private:
     DLabel *image;                       // 容器镜像
     DLabel *port;                        // 容器端口
     DLabel *contaierId;                  // 容器id
+    QSqlDatabase db;                     // 数据库
 };
 
 #endif // WIDGET_H
