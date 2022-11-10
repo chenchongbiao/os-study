@@ -14,7 +14,7 @@ func InitDB(db *sql.DB) (*ContainerMapper, error) {
 		db: db,
 	}
 	sql_table := `
-	CREATE TABLE IF NOT EXISTS image(
+	CREATE TABLE IF NOT EXISTS container(
 		name VARCHAR(100) NULL PRIMARY KEY,
 		status int NULL,
 		image VARCHAR(100) NULL,
