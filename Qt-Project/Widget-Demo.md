@@ -21,3 +21,7 @@
 介绍：使用QListWidget，完成一个docker列表功能。
 
 参考：https://blog.csdn.net/karongsmile/article/details/79796791
+
+# Sqlite-demo
+
+介绍：使用Qt操作sqlite数据库，并从数据库把数据显示到ListWidget中。
