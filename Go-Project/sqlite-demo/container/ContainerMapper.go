@@ -26,3 +26,14 @@ func InitDB(db *sql.DB) (*ContainerMapper, error) {
 	}
 	return &image, err
 }
+
+func NewContainerItem(name, image, port, ip string, status int) *ContainerModel {
+	tb := ContainerModel{
+		Name:   name,
+		Status: status,
+		Image:  image,
+		Port:   port,
+		Ip:     ip,
+	}
+	return &tb
+}
