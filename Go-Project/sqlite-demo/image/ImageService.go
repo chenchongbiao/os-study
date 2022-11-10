@@ -60,6 +60,7 @@ func (i *ImageService) PullPrivateImage(img, user, password string) (result stri
 	encodedJson, _ := json.Marshal(authConfig)
 	authStr := base64.URLEncoding.EncodeToString(encodedJson)
 	out, err := i.cli.ImagePull(ctx, img, types.ImagePullOptions{RegistryAuth: authStr})
+	i.GetImageList() // 更新镜像列表
 	out.Close()
 	if err != nil {
 		result = "镜像拉取失败\n" + err.Error()
