@@ -1,6 +1,6 @@
 package container
 
-type Container struct {
+type ContainerModel struct {
 	Name   string // 容器名
 	Status int    // 状态
 	Image  string // 镜像
