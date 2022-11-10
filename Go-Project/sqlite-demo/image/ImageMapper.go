@@ -47,8 +47,7 @@ func (imgMapper *ImageMapper) Insert(imgModel *ImageModel) {
 
 func (imgMapper *ImageMapper) SelectImageByImgId(img_id string) bool {
 	// 查询一条记录时, 不能使用类似if err := db.QueryRow().Scan(&...); err != nil {}的处理方式
-	// 因为查询单条数据时, 可能返回var ErrNoRows = errors.New("sql: no rows in result set")该种错误信息
-	// 而这属于正常错误
+	// 因为查询单条数据时, 可能返回var ErrNoRows = errors.New("sql: no rows in result set")该种错误信息，而这属于正常错误
 	var result string
 	err := imgMapper.db.QueryRow("SELECT img_id FROM image WHERE img_id = ?", img_id).Scan(&result)
 	switch {
