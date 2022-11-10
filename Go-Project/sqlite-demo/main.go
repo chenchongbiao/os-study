@@ -9,6 +9,7 @@ import (
 	"sqlite-demo/image"
 
 	"github.com/docker/docker/client"
+	"github.com/docker/docker/container"
 	_ "github.com/mattn/go-sqlite3"
 )
 
@@ -33,6 +34,7 @@ func main() {
 	for {
 		fmt.Println("1. 拉取镜像")
 		fmt.Println("2. 获取镜像列表")
+		fmt.Println("3. 获取容器列表")
 		fmt.Println("请输入数字：")
 		fmt.Scan(&ch1)
 		switch ch1 {
@@ -44,6 +46,9 @@ func main() {
 			imgService := image.InitService(cli, db)
 			result, _ := imgService.GetImageList()
 			fmt.Println(result)
+		case "3":
+			containerService := container.InitService(cli, db)
+
 		}
 	}
 
