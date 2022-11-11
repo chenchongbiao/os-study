@@ -10,11 +10,17 @@ public:
     Container();
     Container(QString ContainerId,QString Name,QString State,QString Image,QString Port,QString Command);
     QString GetContainerId();
-    QString SetContainerId();
+    void SetContainerId(QString ContainerId);
     QString GetName();
-    QString SetName();
+    void SetName(QString Name);
     QString GetState();
-    QString SetState();
+    void SetState(QString State);
+    QString GetImage();
+    void SetImage(QString Image);
+    QString GetPort();
+    void SetPort(QString Port);
+    QString GetCommand();
+    void SetCommand(QString Command);
 
 private:
     QString ContainerId;  // 容器id
