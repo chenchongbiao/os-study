@@ -34,14 +34,6 @@ func (c *ContainerService) GetContainerList() (result string, err error) {
 		return
 	}
 	for _, container := range containers {
-		fmt.Println("ID", container.ID)
-		fmt.Println("Names", strings.Join(container.Names, "")[1:])
-		fmt.Println("State", container.State) // running or exited
-		fmt.Println("Image", container.Image)
-		ports, _ := json.Marshal(container.Ports)
-		portsStr := string(ports)
-		fmt.Println("Ports", portsStr)
-		fmt.Println("Command", container.Command)
 		var container_id string
 		var name string
 		var state string
@@ -60,7 +52,6 @@ func (c *ContainerService) GetContainerList() (result string, err error) {
 			tb := NewContainerItem(container_id, name, state, image, port, command)
 			c.containerMapper.Insert(tb)
 		}
-		break
 	}
 	result = "获取镜像列表成功"
 	return result, err
