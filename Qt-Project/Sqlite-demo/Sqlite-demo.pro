@@ -8,7 +8,9 @@ TEMPLATE = app
 SOURCES += \
         main.cpp \
     widget.cpp \
-    model/container.cpp
+    model/container.cpp \
+    mapper/containermapper.cpp \
+    utils/stringutils.cpp
 
 RESOURCES +=         resources.qrc
 
@@ -17,4 +19,6 @@ FORMS += \
 
 HEADERS += \
     widget.h \
-    model/container.h
+    model/container.h \
+    mapper/containermapper.h \
+    utils/stringutils.h

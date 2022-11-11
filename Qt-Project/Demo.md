@@ -25,3 +25,15 @@
 # Sqlite-demo
 
 介绍：使用Qt操作sqlite数据库，并从数据库把数据显示到ListWidget中。
+
+问题：json做数据转换
+
+参考：
+
+[QT中json与数据转换](https://blog.csdn.net/dimake/article/details/127226106)
+
+[Qt操作SQLite数据库的三种方式](https://blog.csdn.net/fuhanghang/article/details/124456862)
+
+[Qt QSqlite数据库](https://blog.csdn.net/kchmmd/article/details/122625874)
+
+[QT通过数据封装实现Json结构和数据类之间的相互转换](https://blog.csdn.net/Cappuccino_jay/article/details/126604433?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EYuanLiJiHua%7EPosition-2-126604433-blog-127226106.pc_relevant_3mothn_strategy_recovery&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EYuanLiJiHua%7EPosition-2-126604433-blog-127226106.pc_relevant_3mothn_strategy_recovery&utm_relevant_index=3)

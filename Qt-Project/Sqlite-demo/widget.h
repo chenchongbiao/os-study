@@ -9,6 +9,8 @@
 #include <DLabel>
 #include <QSqlDatabase>
 
+#include "mapper/containermapper.h"
+
 DWIDGET_USE_NAMESPACE
 
 namespace Ui {
@@ -24,6 +26,7 @@ public:
     ~widget();
     void initUI();
     void initDB();
+    QString GetPortFromJson(QByteArray strJson);  // 从json数据中提取端口数据
 
 private:
     Ui::widget *ui;
@@ -45,6 +48,7 @@ private:
     DLabel *port;                        // 容器端口
     DLabel *contaierId;                  // 容器id
     QSqlDatabase db;                     // 数据库
+    ContainerMapper containerMapper;     // container数据表操作
 };
 
 #endif // WIDGET_H

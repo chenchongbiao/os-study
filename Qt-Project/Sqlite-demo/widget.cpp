@@ -2,9 +2,15 @@
 #include <DSwitchButton>
 #include <QToolButton>
 #include <QDir>
+#include <QSqlQuery>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QJsonParseError>
+#include <QJsonArray>
 
 #include "widget.h"
 #include "ui_widget.h"
+#include "mapper/containermapper.h"
 
 widget::widget(QWidget *parent) :
     QWidget(parent),
@@ -92,18 +98,19 @@ void widget::initUI()
 
     image = new DLabel("镜像");
     image->setAlignment(Qt::AlignCenter);
-    image->setFixedWidth(110);
+    image->setFixedWidth(150);
     columnLayout->addWidget(image);
 
     port = new DLabel("端口");
     port->setAlignment(Qt::AlignCenter);
-    port->setFixedWidth(110);
+    port->setFixedWidth(90);
     columnLayout->addWidget(port);
 
     /*
      * 初始化docker列表
     */
-    for (int i=0;i<6;i++) {
+    QSqlQuery query =containerMapper.GetContainerList();
+    while(query.next()){
         QWidget *dockerWidget = new QWidget(ui->dockerListWdg);  // 主页软件单条数据控件
         dockerWidget->resize(ui->dockerListWdg->width(),ui->dockerListWdg->height());
 
@@ -114,17 +121,23 @@ void widget::initUI()
         checkBtn->setFixedSize(height-20,height);
         layout->addWidget(checkBtn);
 
-        DLabel *dockerId = new DLabel("ee522ef1b774");
+        QString id= query.value(0).toString().left(12);
+        DLabel *dockerId = new DLabel(id);
         dockerId->setAlignment(Qt::AlignCenter);
         dockerId->setFixedWidth(110);
         layout->addWidget(dockerId);
 
-        DLabel *dockerName = new DLabel("/fastosdocker");
-        dockerName->setAlignment(Qt::AlignCenter);
+        QString name = query.value(1).toString();
+        DLabel *dockerName = new DLabel(name);
+//        dockerName->setAlignment(Qt::AlignCenter);
         dockerName->setFixedWidth(110);
         layout->addWidget(dockerName);
 
+        QString state = query.value(2).toString();
         DSwitchButton *statusBtn = new DSwitchButton();
+        if (state == "running"){
+            statusBtn->setChecked(true);
+        }
         statusBtn->setFixedWidth(60);
         layout->addWidget(statusBtn);
 
@@ -149,15 +162,21 @@ void widget::initUI()
         logBtn->setStyleSheet("DPushButton{background-color:transparent}");
         addressLayout->addWidget(terminalBtn);
 
-        DLabel *dockerImage = new DLabel("wangbinxingkong/fa");
-        dockerImage->setAlignment(Qt::AlignCenter);
-        dockerImage->setFixedWidth(110);
+        QString image = query.value(3).toString();
+        qDebug () <<image.indexOf("sha256:") ;
+        if (image.indexOf("sha256") != -1) {
+            image = image.mid(7,image.length()-1);
+        }
+        DLabel *dockerImage = new DLabel(image);
+//        dockerImage->setAlignment(Qt::AlignCenter);
+        dockerImage->setFixedWidth(150);
         layout->addWidget(dockerImage);
 
-        DLabel *dockerPort = new DLabel("8081 : 8081\n"
-                                        "8082 : 8081");
+        QByteArray portArray = query.value(4).toString().toUtf8();
+        QString port = GetPortFromJson(portArray);
+        DLabel *dockerPort = new DLabel(port);
         dockerPort->setAlignment(Qt::AlignCenter);
-        dockerPort->setFixedWidth(110);
+        dockerPort->setFixedWidth(90);
         layout->addWidget(dockerPort);
 
 
@@ -186,6 +205,29 @@ void widget::initDB()
     if(db.open()){
         qDebug()<<"数据库打开成功";
         //关闭数据库
-        db.close();
+//        db.close();
     }
+}
+
+QString widget::GetPortFromJson(QByteArray portArray)
+{
+    QString result;
+    QJsonParseError jsonError;
+    QJsonDocument doucment = QJsonDocument::fromJson(portArray, &jsonError);  // 转化为 JSON 文档
+    if (!doucment.isNull() && (jsonError.error == QJsonParseError::NoError)) { // 解析未发生错误
+        if (doucment.isArray()) { // JSON 文档为数组
+                QJsonArray array = doucment.array();
+                int nSize = array.size();
+                for (int i = 0; i < nSize; ++i) {
+                    QJsonValue value = array.at(i);      // 取出单个json
+                    QJsonObject obj = value.toObject();  // 转换为object
+                    double privatePort =obj.value("PrivatePort").toDouble();
+                    double publicPort = obj.value("PublicPort").toDouble();
+//                    QString portValue = obj.value("PrivatePort").toString() + obj.value("PublicPort").toString();
+//                    QString portValue = QString("%1:%2").arg(privatePort).arg(publicPort);
+                    result += QString("%1:%2\n").arg(privatePort).arg(publicPort);
+                }
+            }
+    }
+    return result;
 }
