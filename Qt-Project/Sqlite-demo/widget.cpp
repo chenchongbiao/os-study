@@ -163,7 +163,6 @@ void widget::initUI()
         addressLayout->addWidget(terminalBtn);
 
         QString image = query.value(3).toString();
-        qDebug () <<image.indexOf("sha256:") ;
         if (image.indexOf("sha256") != -1) {
             image = image.mid(7,image.length()-1);
         }
