@@ -46,7 +46,7 @@ func NewContainer(service *dbusutil.Service) *Container {
 
 	err = service.RequestName(dbusServiceName)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("NewContainer", err)
 	}
 	return &container
 }
