@@ -175,3 +175,38 @@ dde-daemon dbus API:
 Deepin GoLang 库是一个包含许多有用的 go 例程的库，用于 glib、gettext、存档、图形等。
 
 仓库链接：[https://github.com/linuxdeepin/go-lib](https://github.com/linuxdeepin/go-lib)
+
+# DDE桌面移植
+
+## DTK安装与编译
+
+[原链接](https://wiki.deepin.org/zh/01_deepin%E9%85%8D%E5%A5%97%E7%94%9F%E6%80%81/02_deepin%E6%B7%B1%E5%85%A5/01_DTK%E7%9B%B8%E5%85%B3/DTK)
+
+### DTK简介
+
+DTK (deepin tool kit) 是基于Qt5开发的一整套UI图形库，便于编写风格统一的深度桌面和深度系列应用，主要的功能有：
+
+* 提供单实例的接口，方便直接使用，不用重复造轮子。
+* 提供XCB窗口移动、缩放等一系列函数，无边框的窗口。
+* 提供美观的自绘控件，直接拖拽使用。
+
+DTK链接：[https://github.com/orgs/linuxdeepin/repositories?q=dtk](https://github.com/orgs/linuxdeepin/repositories?q=dtk)
+
+**DTK核心仓库：**
+
+* **dtkcore:** [https://github.com/linuxdeepin/dtkcore](https://github.com/linuxdeepin/dtkcore)
+* **dtkgui:** [https://github.com/linuxdeepin/dtkgui](https://github.com/linuxdeepin/dtkgui)
+* **dtkwidget:** [https://github.com/linuxdeepin/dtkwidget](https://github.com/linuxdeepin/dtkwidget)
+* **qt5integration:** [https://github.com/linuxdeepin/qt5integration](https://github.com/linuxdeepin/qt5integration)
+
+若要从源码编译、安装dtk组件，请按照dtkcore > dtkgui > dtkwidget的顺序编译，且保证dktcore、dtkgui、dtkwidget的版本一致。如果不参与开发，则推荐您切换到相应的 tag 版进行构建
+
+### 基础环境
+
+从源码编译DTK组件，则需要首先安装基础环境，打开终端输入以下命令：
+
+```bash
+sudo apt install git build-essential cmake devscripts doxygen graphviz
+```
+
+ 尝试以openkylin安装，其中graphviz无法安装。
