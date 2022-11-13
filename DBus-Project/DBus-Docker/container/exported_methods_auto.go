@@ -4,12 +4,12 @@ import (
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
 
-func (container *Container) GetExportedMethods() dbusutil.ExportedMethods {
+func (c *ContainerService) GetExportedMethods() dbusutil.ExportedMethods {
 	return dbusutil.ExportedMethods{
 		{
-			Name:    "List",
-			Fn:      container.List,
-			OutArgs: []string{"result"},
+			Name:    "GetContainerList",
+			Fn:      c.GetContainerList,
+			OutArgs: []string{"result", "code"},
 		},
 	}
 }
