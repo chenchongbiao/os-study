@@ -3,10 +3,12 @@ package main
 import (
 	"fmt"
 
+	"./config"
 	"./container"
 	"./image"
 	"github.com/docker/docker/client"
 	"github.com/linuxdeepin/go-lib/dbusutil"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 /*
@@ -20,18 +22,21 @@ sudo gpasswd -a $USER docker & newgrp docker
 */
 
 var (
-	cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost("tcp://localhost:2375"))
-
-	imageName     = "docker.io/busybox"
-	containerID   = ""
-	containerName = "busybox-test"
+	cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation())
 )
 
 func main() {
 	service, err := dbusutil.NewSessionService()
+	db, err := config.InitDatabase()
+	if err != nil {
+		fmt.Println("数据库初始化失败", err)
+		return
+	}
+
 	img := image.NewImage(service, cli)
-	con := container.NewContainer(service)
-	fmt.Println(img, err)
-	fmt.Println(con, err)
+	fmt.Println("镜像服务启动成功", img)
+	con := container.NewContainer(service, cli, db)
+	fmt.Println("容器服务启动成功", con)
 	service.Wait()
+	db.Close()
 }
