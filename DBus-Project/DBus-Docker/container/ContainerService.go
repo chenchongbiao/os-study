@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/docker/docker/client"
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
@@ -20,13 +19,6 @@ const (
 	dbusInterface   = dbusServiceName
 )
 
-var (
-	cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost("tcp://localhost:2375"))
-	// imageName     = "docker.io/busybox"
-	// containerID   = ""
-	// containerName = "busybox-test"
-)
-
 type Container struct {
 	service *dbusutil.Service
 }
@@ -39,7 +31,7 @@ func NewContainer(service *dbusutil.Service) *Container {
 	container := Container{
 		service: service,
 	}
-	err = service.Export(dbusPath, &container)
+	err := service.Export(dbusPath, &container)
 	if err != nil {
 		fmt.Println(err)
 	}
