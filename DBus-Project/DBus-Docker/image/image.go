@@ -27,7 +27,7 @@ const (
 )
 
 var (
-	cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation(), client.WithHost("tcp://localhost:2375"))
+	cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation())
 )
 
 type Image struct {
