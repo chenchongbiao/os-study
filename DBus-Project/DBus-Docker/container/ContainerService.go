@@ -1,9 +1,14 @@
 package container
 
 import (
+	"context"
+	"database/sql"
+	"encoding/json"
 	"fmt"
-	"log"
 
+	"../config"
+	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/client"
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
@@ -19,19 +24,24 @@ const (
 	dbusInterface   = dbusServiceName
 )
 
-type Container struct {
-	service *dbusutil.Service
+type ContainerService struct {
+	service         *dbusutil.Service
+	cli             *client.Client
+	containerMapper *ContainerMapper
 }
 
-func (container *Container) GetInterfaceName() string {
+func (c *ContainerService) GetInterfaceName() string {
 	return dbusServiceName
 }
 
-func NewContainer(service *dbusutil.Service) *Container {
-	container := Container{
-		service: service,
+func NewContainer(service *dbusutil.Service, cli *client.Client, db *sql.DB) *ContainerService {
+	containerMapper, _ := InitDB(db)
+	containerService := ContainerService{
+		service:         service,
+		cli:             cli,
+		containerMapper: containerMapper,
 	}
-	err := service.Export(dbusPath, &container)
+	err := service.Export(dbusPath, &containerService)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -40,17 +50,23 @@ func NewContainer(service *dbusutil.Service) *Container {
 	if err != nil {
 		fmt.Println("NewContainer", err)
 	}
-	return &container
+	return &containerService
 }
 
-func (container *Container) List() (result string, err *dbus.Error) {
-	// out, err := cli.ImagePull(image.Context, image.ImageName, image.ImagePullOptions)
+func (c *ContainerService) GetContainerList() (result string, code int, busErr *dbus.Error) {
+	ctx := context.Background()
+	containers, err := c.cli.ContainerList(ctx, types.ContainerListOptions{All: true})
 	if err != nil {
-		log.Fatal("image pull error ", err.Error())
+		fmt.Println("GetContainerList", err)
+		result = "获取容器列表失败"
+		code = config.Fail_code
+		return result, code, nil
 	}
+
 	// defer out.Close()
 	// io.Copy(os.Stdout, out)
-	result = "1111"
-	err = nil
-	return result, err
+	list, _ := json.Marshal(containers)
+	result = string(list)
+	code = config.Success_code
+	return result, code, nil
 }
