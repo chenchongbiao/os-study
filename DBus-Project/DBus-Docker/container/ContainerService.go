@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"time"
 
 	"../config"
 	"github.com/docker/docker/api/types"
@@ -49,20 +51,48 @@ func NewContainer(service *dbusutil.Service, cli *client.Client) *ContainerServi
 	return &containerService
 }
 
-func (c *ContainerService) GetContainerList() (result string, code int, busErr *dbus.Error) {
+func (c *ContainerService) GetContainerList() (result string, busErr *dbus.Error) {
 	ctx := context.Background()
 	containers, err := c.cli.ContainerList(ctx, types.ContainerListOptions{All: true})
 	if err != nil {
-		fmt.Println("GetContainerList", err)
+		log.Fatal("获取容器列表失败", err)
 		result = "获取容器列表失败"
-		code = config.Fail_code
-		return result, code, nil
+		return result, nil
 	}
 
 	// defer out.Close()
 	// io.Copy(os.Stdout, out)
 	list, _ := json.Marshal(containers)
 	result = string(list)
+	fmt.Println("容器列表获取成功")
+	return result, nil
+}
+
+func (c *ContainerService) StopContainer(containerID string) (code int, busErr *dbus.Error) {
+	ctx := context.Background()
+
+	timeout := time.Minute
+	err := c.cli.ContainerStop(ctx, containerID, &timeout)
+	if err != nil {
+		log.Fatal("容器停止失败 ", err.Error())
+		code = config.Fail_code
+		return code, nil
+	}
+	fmt.Println("容器停止成功")
 	code = config.Success_code
-	return result, code, nil
+	return code, nil
+}
+
+func (c *ContainerService) StartContainer(containerID string) (code int, busErr *dbus.Error) {
+	ctx := context.Background()
+
+	err := c.cli.ContainerStart(ctx, containerID, types.ContainerStartOptions{})
+	if err != nil {
+		log.Fatal("容器启动失败 ", err.Error())
+		code = config.Fail_code
+		return code, nil
+	}
+	fmt.Println("容器启动成功")
+	code = config.Success_code
+	return code, nil
 }
