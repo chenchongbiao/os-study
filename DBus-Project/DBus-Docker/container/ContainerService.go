@@ -7,8 +7,8 @@ import (
 	"log"
 	"time"
 
-	"../config"
 	"github.com/docker/docker/api/types"
+	containers "github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/client"
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -68,31 +68,46 @@ func (c *ContainerService) GetContainerList() (result string, busErr *dbus.Error
 	return result, nil
 }
 
-func (c *ContainerService) StopContainer(containerID string) (code int, busErr *dbus.Error) {
+func (c *ContainerService) StopContainer(containerID string) (busErr *dbus.Error) {
 	ctx := context.Background()
 
-	timeout := time.Minute
-	err := c.cli.ContainerStop(ctx, containerID, &timeout)
+	timeout := int(time.Minute)
+	err := c.cli.ContainerStop(ctx, containerID, containers.StopOptions{Timeout: &timeout})
 	if err != nil {
 		log.Fatal("容器停止失败 ", err.Error())
-		code = config.Fail_code
-		return code, nil
+		return nil
 	}
 	fmt.Println("容器停止成功")
-	code = config.Success_code
-	return code, nil
+	return nil
 }
 
-func (c *ContainerService) StartContainer(containerID string) (code int, busErr *dbus.Error) {
+func (c *ContainerService) StartContainer(containerID string) (busErr *dbus.Error) {
 	ctx := context.Background()
 
 	err := c.cli.ContainerStart(ctx, containerID, types.ContainerStartOptions{})
 	if err != nil {
 		log.Fatal("容器启动失败 ", err.Error())
-		code = config.Fail_code
-		return code, nil
+		return nil
 	}
 	fmt.Println("容器启动成功")
-	code = config.Success_code
-	return code, nil
+	return nil
+}
+
+func (c *ContainerService) ReStartContainer(containerID string) (busErr *dbus.Error) {
+	ctx := context.Background()
+
+	timeout := int(time.Minute)
+	err := c.cli.ContainerStop(ctx, containerID, containers.StopOptions{Timeout: &timeout})
+	if err != nil {
+		log.Fatal("容器停止失败 ", err.Error())
+		return nil
+	}
+	fmt.Println("容器停止成功")
+	err = c.cli.ContainerStart(ctx, containerID, types.ContainerStartOptions{})
+	if err != nil {
+		log.Fatal("容器重启失败 ", err.Error())
+		return nil
+	}
+	fmt.Println("容器重启成功")
+	return nil
 }
