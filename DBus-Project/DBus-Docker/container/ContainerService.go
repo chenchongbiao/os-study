@@ -2,7 +2,6 @@ package container
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"fmt"
 
@@ -25,21 +24,18 @@ const (
 )
 
 type ContainerService struct {
-	service         *dbusutil.Service
-	cli             *client.Client
-	containerMapper *ContainerMapper
+	service *dbusutil.Service
+	cli     *client.Client
 }
 
 func (c *ContainerService) GetInterfaceName() string {
 	return dbusServiceName
 }
 
-func NewContainer(service *dbusutil.Service, cli *client.Client, db *sql.DB) *ContainerService {
-	containerMapper, _ := InitDB(db)
+func NewContainer(service *dbusutil.Service, cli *client.Client) *ContainerService {
 	containerService := ContainerService{
-		service:         service,
-		cli:             cli,
-		containerMapper: containerMapper,
+		service: service,
+		cli:     cli,
 	}
 	err := service.Export(dbusPath, &containerService)
 	if err != nil {
