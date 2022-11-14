@@ -18,7 +18,7 @@ sudo sed -i "s@/usr/bin/dockerd@$str@" /usr/lib/systemd/system/docker.service
 sudo systemctl daemon-reload && systemctl restart docker
 
 将登录用户加入到docker用户组中
-sudo gpasswd -a $USER docker & newgrp docker
+sudo gpasswd -a $USER docker && newgrp docker
 */
 
 var (
@@ -35,7 +35,7 @@ func main() {
 
 	img := image.NewImage(service, cli)
 	fmt.Println("镜像服务启动成功", img)
-	con := container.NewContainer(service, cli, db)
+	con := container.NewContainer(service, cli)
 	fmt.Println("容器服务启动成功", con)
 	service.Wait()
 	db.Close()
