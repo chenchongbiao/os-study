@@ -9,6 +9,7 @@ import (
 
 	"github.com/docker/docker/api/types"
 	containers "github.com/docker/docker/api/types/container"
+	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -110,4 +111,24 @@ func (c *ContainerService) ReStartContainer(containerID string) (busErr *dbus.Er
 	}
 	fmt.Println("容器重启成功")
 	return nil
+}
+
+func (c *ContainerService) SearchContainerList(containerName string) (result string, busErr *dbus.Error) {
+	ctx := context.Background()
+	filter := filters.NewArgs()
+	filter.Add("name", containerName)
+
+	containers, err := c.cli.ContainerList(ctx, types.ContainerListOptions{Filters: filter})
+
+	if err != nil {
+		log.Fatal("获取容器列表失败", err)
+		result = "获取容器列表失败"
+		return result, nil
+	}
+
+	fmt.Println(containers)
+	list, _ := json.Marshal(containers)
+	result = string(list)
+	fmt.Println("容器列表获取成功")
+	return result, nil
 }

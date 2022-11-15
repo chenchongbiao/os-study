@@ -26,5 +26,11 @@ func (c *ContainerService) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:     c.ReStartContainer,
 			InArgs: []string{"containerID"},
 		},
+		{
+			Name:    "SearchContainerList",
+			Fn:      c.SearchContainerList,
+			InArgs:  []string{"containerName"},
+			OutArgs: []string{"result"},
+		},
 	}
 }
