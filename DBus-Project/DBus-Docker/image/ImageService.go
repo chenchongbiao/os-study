@@ -55,20 +55,19 @@ func NewImage(service *dbusutil.Service, cli *client.Client) *Image {
 	}
 	return &image
 }
-func (image *Image) PullImage(img string) (result string, busErr *dbus.Error) {
+func (image *Image) PullImage(img string) (busErr *dbus.Error) {
 	ctx := context.Background()
 	out, err := image.cli.ImagePull(ctx, img, types.ImagePullOptions{})
 	if err != nil {
-		result = "镜像拉取失败\n" + err.Error()
-		fmt.Println(result, err)
-		return result, nil
+		log.Fatal("镜像拉取失败 ", err)
+		return nil
 	}
 	io.Copy(os.Stdout, out)
-	result = "镜像拉取成功"
-	return result, nil
+	fmt.Println("镜像拉取成功")
+	return nil
 }
 
-func (image *Image) PullPrivateImage(img, user, password string) (result string, busErr *dbus.Error) {
+func (image *Image) PullPrivateImage(img, user, password string) (busErr *dbus.Error) {
 	ctx := context.Background()
 	authConfig := types.AuthConfig{
 		Username: user,
@@ -79,19 +78,20 @@ func (image *Image) PullPrivateImage(img, user, password string) (result string,
 	out, err := image.cli.ImagePull(ctx, img, types.ImagePullOptions{RegistryAuth: authStr})
 	out.Close()
 	if err != nil {
-		result = "镜像拉取失败\n" + err.Error()
-		fmt.Println(result, err)
+		log.Fatal("私有镜像拉取失败 ", err)
+		return nil
 	}
 	io.Copy(os.Stdout, out)
-	result = "镜像拉取成功"
-	return result, nil
+	// result = "镜像拉取成功"
+	fmt.Println("私有镜像拉取成功")
+	return nil
 }
 
-func (image *Image) ImageList() (result string, busErr *dbus.Error) {
+func (image *Image) GetImageList() (result string, busErr *dbus.Error) {
 	ctx := context.Background()
 	images, err := cli.ImageList(ctx, types.ImageListOptions{All: true})
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("镜像列表获取失败", err)
 	}
 
 	list, _ := json.Marshal(images)
