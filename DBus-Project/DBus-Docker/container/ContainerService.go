@@ -113,7 +113,7 @@ func (c *ContainerService) ReStartContainer(containerID string) (busErr *dbus.Er
 	return nil
 }
 
-func (c *ContainerService) SearchContainerList(containerName string) (result string, busErr *dbus.Error) {
+func (c *ContainerService) SearchContainerListByName(containerName string) (result string, busErr *dbus.Error) {
 	ctx := context.Background()
 	filter := filters.NewArgs()
 	filter.Add("name", containerName)
