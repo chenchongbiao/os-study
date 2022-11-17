@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/docker/docker/api/types"
+	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
@@ -93,5 +94,25 @@ func (image *Image) GetImageList() (result string, busErr *dbus.Error) {
 	list, _ := json.Marshal(images)
 	result = string(list)
 	fmt.Println(result)
+	return result, nil
+}
+
+func (image *Image) SearchImageListByName(imageName string) (result string, busErr *dbus.Error) {
+	ctx := context.Background()
+	filter := filters.NewArgs()
+	filter.Add("label", imageName)
+
+	images, err := image.cli.ImageList(ctx, types.ImageListOptions{Filters: filter})
+
+	if err != nil {
+		log.Fatal("获取镜像列表失败", err)
+		result = "获取容器列表失败"
+		return result, nil
+	}
+
+	list, _ := json.Marshal(images)
+	result = string(list)
+	fmt.Println("镜像列表获取成功")
+	fmt.Println(images)
 	return result, nil
 }
