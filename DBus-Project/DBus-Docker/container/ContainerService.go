@@ -62,13 +62,22 @@ func (c *ContainerService) CreateContainer() (busErr *dbus.Error) {
 	// 	"127.0.0.1:8080:2368",
 	// })
 
-	volumes := {
-		"/home/bluesky"
+	volumes := map[string]string{
+		// "/home/bluesky/Desktop/name1": "/home/bluesky/Desktop/name2",
+		"/home/bluesky/Desktop/name1": "/home/bluesky/Desktop/name1p",
 	}
 	// 文件挂载
 	m := make([]mount.Mount, 0, len(volumes))
 	for k, v := range volumes {
-		m = append(m, mount.Mount{Type: mount.TypeBind, Source: k, Target: v})
+		m = append(m, mount.Mount{
+			Type:   mount.TypeBind,
+			Source: k,
+			Target: v,
+			// BindOptions: &mount.BindOptions{
+			// 	Propagation:  "bind,rw,rprivate",
+			// 	NonRecursive: true,
+			// },
+		})
 	}
 
 	exports := make(nat.PortSet)
@@ -77,29 +86,37 @@ func (c *ContainerService) CreateContainer() (busErr *dbus.Error) {
 	// 网络端口映射
 	natPort, _ := nat.NewPort("tcp", srcPort)
 	exports[natPort] = struct{}{}
-	dstPort := "8080"
+	dstPort := "8081"
 	portList := make([]nat.PortBinding, 0, 1)
 	portList = append(portList, nat.PortBinding{HostIP: "0.0.0.0", HostPort: dstPort})
 	netPort[natPort] = portList
 
 	resp, err := c.cli.ContainerCreate(ctx,
+		// &containers.Config{
+		// 	Image: "ubuntu:20.04",
+		// 	ExposedPorts: nat.PortSet{
+		// 		"8080/tcp": {},
+		// 	},
+		// },
 		&containers.Config{
-			Image: "ubuntu:22.04",
-			ExposedPorts: nat.PortSet{
-				"8080/tcp": {},
-			},
+			Image:        "ubuntu:20.04",
+			ExposedPorts: exports,
+			Cmd:          []string{"bash"},
+			Tty:          true,
 		},
 		&containers.HostConfig{
-			PortBindings: nat.PortMap{
-				"8080/tcp": []nat.PortBinding{
-					{
-						// 映射本地端口;
-						//HostPort给0默认随机选择一个空闲的端口
-						HostIP:   "",
-						HostPort: "8000",
-					},
-				},
-			},
+			// PortBindings: nat.PortMap{
+			// 	"8080/tcp": []nat.PortBinding{
+			// 		{
+			// 			// 映射本地端口;
+			// 			//HostPort给0默认随机选择一个空闲的端口
+			// 			HostIP:   "",
+			// 			HostPort: "8081",
+			// 		},
+			// 	},
+			// },
+			PortBindings: netPort,
+			Mounts:       m,
 			// Links: []string{"no-such-container"},
 		},
 		&network.NetworkingConfig{
@@ -214,9 +231,8 @@ func (c *ContainerService) SearchContainerById(containerId string) (result strin
 		return result, nil
 	}
 
-	fmt.Println(containers)
 	list, _ := json.Marshal(containers)
 	result = string(list)
-	fmt.Println("容器列表获取成功")
+	fmt.Printf("容器列表获取成功%#v", containers)
 	return result, nil
 }
