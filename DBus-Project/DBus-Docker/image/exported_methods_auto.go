@@ -21,5 +21,11 @@ func (image *Image) GetExportedMethods() dbusutil.ExportedMethods {
 			Fn:      image.GetImageList,
 			OutArgs: []string{"result"},
 		},
+		{
+			Name:    "SearchImageListByName",
+			Fn:      image.SearchImageListByName,
+			InArgs:  []string{"imageName"},
+			OutArgs: []string{"result"},
+		},
 	}
 }

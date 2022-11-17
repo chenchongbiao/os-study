@@ -100,7 +100,7 @@ func (image *Image) GetImageList() (result string, busErr *dbus.Error) {
 func (image *Image) SearchImageListByName(imageName string) (result string, busErr *dbus.Error) {
 	ctx := context.Background()
 	filter := filters.NewArgs()
-	filter.Add("label", imageName)
+	filter.Add("reference", imageName)
 
 	images, err := image.cli.ImageList(ctx, types.ImageListOptions{Filters: filter})
 
