@@ -145,10 +145,10 @@ func (c *ContainerService) SearchContainerListByName(containerName string) (resu
 		return result, nil
 	}
 
-	fmt.Println(containers)
 	list, _ := json.Marshal(containers)
 	result = string(list)
 	fmt.Println("容器列表获取成功")
+	fmt.Println(containers)
 	return result, nil
 }
 
