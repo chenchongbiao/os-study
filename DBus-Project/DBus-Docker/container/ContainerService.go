@@ -11,6 +11,7 @@ import (
 	containers "github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/client"
+	"github.com/docker/go-connections/nat"
 	"github.com/godbus/dbus"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 )
@@ -50,6 +51,24 @@ func NewContainer(service *dbusutil.Service, cli *client.Client) *ContainerServi
 		fmt.Println("NewContainer", err)
 	}
 	return &containerService
+}
+
+func (c *ContainerService) CreateContainer(name, image, workDir string, cmd []string, volumes map[string]struct{}, ports nat.PortSet) (busErr *dbus.Error) {
+	ctx := context.Background()
+	resp, err := c.cli.ContainerCreate(ctx, &containers.Config{
+		Image:        image,
+		Volumes:      volumes,
+		ExposedPorts: nil,
+		Cmd:          cmd,
+		Tty:          false,
+	}, nil, nil, nil, name)
+	if err != nil {
+		return nil
+	}
+	if err = c.cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+		return nil
+	}
+	return nil
 }
 
 func (c *ContainerService) GetContainerList() (result string, busErr *dbus.Error) {
@@ -94,7 +113,7 @@ func (c *ContainerService) StartContainer(containerID string) (busErr *dbus.Erro
 	return nil
 }
 
-func (c *ContainerService) ReStartContainer(containerID string) (busErr *dbus.Error) {
+func (c *ContainerService) RestartContainer(containerID string) (busErr *dbus.Error) {
 	ctx := context.Background()
 
 	timeout := int(time.Minute)
@@ -117,6 +136,26 @@ func (c *ContainerService) SearchContainerListByName(containerName string) (resu
 	ctx := context.Background()
 	filter := filters.NewArgs()
 	filter.Add("name", containerName)
+
+	containers, err := c.cli.ContainerList(ctx, types.ContainerListOptions{Filters: filter})
+
+	if err != nil {
+		log.Fatal("获取容器列表失败", err)
+		result = "获取容器列表失败"
+		return result, nil
+	}
+
+	fmt.Println(containers)
+	list, _ := json.Marshal(containers)
+	result = string(list)
+	fmt.Println("容器列表获取成功")
+	return result, nil
+}
+
+func (c *ContainerService) SearchContainerById(containerId string) (result string, busErr *dbus.Error) {
+	ctx := context.Background()
+	filter := filters.NewArgs()
+	filter.Add("id", containerId)
 
 	containers, err := c.cli.ContainerList(ctx, types.ContainerListOptions{Filters: filter})
 
