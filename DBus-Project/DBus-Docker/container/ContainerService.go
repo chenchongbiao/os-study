@@ -10,6 +10,7 @@ import (
 	"github.com/docker/docker/api/types"
 	containers "github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
 	"github.com/godbus/dbus"
@@ -53,19 +54,46 @@ func NewContainer(service *dbusutil.Service, cli *client.Client) *ContainerServi
 	return &containerService
 }
 
-func (c *ContainerService) CreateContainer(name, image, workDir string, cmd []string, volumes map[string]struct{}, ports nat.PortSet) (busErr *dbus.Error) {
+func (c *ContainerService) CreateContainer() (busErr *dbus.Error) {
+	// name, image, workDir string, cmd []string, volumes map[string]struct{}, ports nat.PortSet
 	ctx := context.Background()
-	resp, err := c.cli.ContainerCreate(ctx, &containers.Config{
-		Image:        image,
-		Volumes:      volumes,
-		ExposedPorts: nil,
-		Cmd:          cmd,
-		Tty:          false,
-	}, nil, nil, nil, name)
+	// exposedPorts, portBindings, _ := nat.ParsePortSpecs([]string{
+	// 	"127.0.0.1:8080:2368",
+	// })
+
+	resp, err := c.cli.ContainerCreate(ctx,
+		&containers.Config{
+			Image: "ubuntu:22.04",
+			ExposedPorts: nat.PortSet{
+				"8080/tcp": {},
+			},
+		},
+		&containers.HostConfig{
+			PortBindings: nat.PortMap{
+				"8080/tcp": []nat.PortBinding{
+					{
+						// 映射本地端口;
+						//HostPort给0默认随机选择一个空闲的端口
+						HostIP:   "",
+						HostPort: "8000",
+					},
+				},
+			},
+			// Links: []string{"no-such-container"},
+		},
+		&network.NetworkingConfig{
+			EndpointsConfig: map[string]*network.EndpointSettings{
+				"bridge": {},
+			},
+		},
+		nil,
+		"test1")
 	if err != nil {
+		log.Fatal("容器创建失败", err)
 		return nil
 	}
 	if err = c.cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
+		log.Fatal("容器启动失败", err)
 		return nil
 	}
 	return nil
