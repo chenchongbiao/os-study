@@ -10,6 +10,7 @@ import (
 	"github.com/docker/docker/api/types"
 	containers "github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
+	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/client"
 	"github.com/docker/go-connections/nat"
@@ -60,6 +61,26 @@ func (c *ContainerService) CreateContainer() (busErr *dbus.Error) {
 	// exposedPorts, portBindings, _ := nat.ParsePortSpecs([]string{
 	// 	"127.0.0.1:8080:2368",
 	// })
+
+	volumes := {
+		"/home/bluesky"
+	}
+	// 文件挂载
+	m := make([]mount.Mount, 0, len(volumes))
+	for k, v := range volumes {
+		m = append(m, mount.Mount{Type: mount.TypeBind, Source: k, Target: v})
+	}
+
+	exports := make(nat.PortSet)
+	netPort := make(nat.PortMap)
+	srcPort := "8080"
+	// 网络端口映射
+	natPort, _ := nat.NewPort("tcp", srcPort)
+	exports[natPort] = struct{}{}
+	dstPort := "8080"
+	portList := make([]nat.PortBinding, 0, 1)
+	portList = append(portList, nat.PortBinding{HostIP: "0.0.0.0", HostPort: dstPort})
+	netPort[natPort] = portList
 
 	resp, err := c.cli.ContainerCreate(ctx,
 		&containers.Config{
