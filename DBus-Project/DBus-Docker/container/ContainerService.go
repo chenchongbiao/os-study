@@ -55,13 +55,11 @@ func NewContainer(service *dbusutil.Service, cli *client.Client) *ContainerServi
 	return &containerService
 }
 
-func (c *ContainerService) CreateContainer() (busErr *dbus.Error) {
-	// name, image, workDir string, cmd []string, volumes map[string]struct{}, ports nat.PortSet
+func (c *ContainerService) CreateContainer(cmd []string, volume map[string]string) (busErr *dbus.Error) {
+	// name, image, workDir string, cmd []string, volumes map[string]string, ports nat.PortSet
+	fmt.Println("cmd", cmd)
+	fmt.Println("volume", volume)
 	ctx := context.Background()
-	// exposedPorts, portBindings, _ := nat.ParsePortSpecs([]string{
-	// 	"127.0.0.1:8080:2368",
-	// })
-
 	volumes := map[string]string{
 		// "/home/bluesky/Desktop/name1": "/home/bluesky/Desktop/name2",
 		"/home/bluesky/Desktop/name1": "/home/bluesky/Desktop/name1p",
@@ -73,10 +71,6 @@ func (c *ContainerService) CreateContainer() (busErr *dbus.Error) {
 			Type:   mount.TypeBind,
 			Source: k,
 			Target: v,
-			// BindOptions: &mount.BindOptions{
-			// 	Propagation:  "bind,rw,rprivate",
-			// 	NonRecursive: true,
-			// },
 		})
 	}
 
