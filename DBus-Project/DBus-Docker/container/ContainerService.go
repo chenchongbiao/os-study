@@ -95,8 +95,8 @@ func (c *ContainerService) CreateContainer(cmd []string, volume map[string]strin
 		&containers.Config{
 			Image:        "ubuntu:20.04",
 			ExposedPorts: exports,
-			Cmd:          []string{"bash"},
-			Tty:          true,
+			// Cmd:          []string{"bash"},
+			Tty: true,
 		},
 		&containers.HostConfig{
 			// PortBindings: nat.PortMap{
