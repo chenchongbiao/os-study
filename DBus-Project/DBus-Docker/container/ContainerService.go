@@ -217,16 +217,15 @@ func (c *ContainerService) SearchContainerById(containerId string) (result strin
 	filter := filters.NewArgs()
 	filter.Add("id", containerId)
 
-	containers, err := c.cli.ContainerList(ctx, types.ContainerListOptions{Filters: filter})
+	container, err := c.cli.ContainerList(ctx, types.ContainerListOptions{Filters: filter})
 
 	if err != nil {
-		log.Fatal("获取容器列表失败", err)
-		result = "获取容器列表失败"
+		log.Fatal("获取容器数据失败", err)
 		return result, nil
 	}
 
-	list, _ := json.Marshal(containers)
+	list, _ := json.Marshal(container)
 	result = string(list)
-	fmt.Printf("容器列表获取成功%#v", containers)
+	fmt.Printf("获取容器数据成功%#v", container)
 	return result, nil
 }
