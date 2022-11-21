@@ -116,3 +116,20 @@ func (image *Image) SearchImageListByName(imageName string) (result string, busE
 	fmt.Println(images)
 	return result, nil
 }
+
+func (image *Image) SearchImageById(imageId string) (result string, busErr *dbus.Error) {
+	ctx := context.Background()
+	filter := filters.NewArgs
+	filter.Add("id", imageId)
+
+	image, err := image.cli.ImageListi(ctx, types.ImageListOptions{Filters: filter})
+
+	if err != nil {
+		log.Fatal("获取镜像数据失败", err)
+	}
+
+	list, _ := json.Marshal(image)
+	result = string(list)
+	fmt.Printf("获取镜像数据成功%#v", image)
+	return result, nil
+}
