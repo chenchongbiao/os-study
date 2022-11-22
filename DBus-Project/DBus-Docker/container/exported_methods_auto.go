@@ -41,7 +41,7 @@ func (c *ContainerService) GetExportedMethods() dbusutil.ExportedMethods {
 		{
 			Name:   "CreateContainer",
 			Fn:     c.CreateContainer,
-			InArgs: []string{"cmd", "volume"},
+			InArgs: []string{"name", "image", "cmd", "ports", "volume"},
 		},
 	}
 }
