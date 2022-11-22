@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"strings"
 	"time"
 
 	"github.com/docker/docker/api/types"
@@ -55,14 +56,15 @@ func NewContainer(service *dbusutil.Service, cli *client.Client) *ContainerServi
 	return &containerService
 }
 
-func (c *ContainerService) CreateContainer(cmd []string, volume map[string]string) (busErr *dbus.Error) {
-	// name, image, workDir string, cmd []string, volumes map[string]string, ports nat.PortSet
-	fmt.Println("cmd", cmd)
-	fmt.Println("volume", volume)
+func (c *ContainerService) CreateContainer(name, image string, cmd, ports []string, volumes map[string]interface{}) (busErr *dbus.Error) {
+	// name, image, workDir string, cmd []string, volumes map[string]interface{}, map[string]interface{}
 	ctx := context.Background()
-	volumes := map[string]string{
-		// "/home/bluesky/Desktop/name1": "/home/bluesky/Desktop/name2",
-		"/home/bluesky/Desktop/name1": "/home/bluesky/Desktop/name1p",
+	// volumes := map[string]string{
+	// 	// "/home/bluesky/Desktop/name1": "/home/bluesky/Desktop/name2",
+	// 	"/home/bluesky/Desktop/name1": "/home/bluesky/Desktop/name1p",
+	// }
+	if len(cmd[0]) == 0 {
+		cmd = []string{"bash"}
 	}
 	// 文件挂载
 	m := make([]mount.Mount, 0, len(volumes))
@@ -70,20 +72,46 @@ func (c *ContainerService) CreateContainer(cmd []string, volume map[string]strin
 		m = append(m, mount.Mount{
 			Type:   mount.TypeBind,
 			Source: k,
-			Target: v,
+			Target: fmt.Sprintf("%v", v),
 		})
 	}
 
 	exports := make(nat.PortSet)
 	netPort := make(nat.PortMap)
-	srcPort := "8080"
-	// 网络端口映射
-	natPort, _ := nat.NewPort("tcp", srcPort)
-	exports[natPort] = struct{}{}
-	dstPort := "8081"
-	portList := make([]nat.PortBinding, 0, 1)
-	portList = append(portList, nat.PortBinding{HostIP: "0.0.0.0", HostPort: dstPort})
-	netPort[natPort] = portList
+
+	// ports := map[string]string{
+	// 	"8081": "tcp:0.0.0.0:8080",
+	// 	"8082": "udp:0.0.0.0:8081",
+	// 	"8083": "sctp:0.0.0.0:8082",
+	// }
+	// for k, v := range ports {
+	// 	mport := strings.Split(v, ":")
+	// 	natPort, _ := nat.NewPort(mport[0], mport[2])
+	// 	portList := make([]nat.PortBinding, 0, 1)
+	// 	exports[natPort] = struct{}{}
+	// 	portList = append(portList, nat.PortBinding{HostIP: mport[1], HostPort: k})
+	// 	netPort[natPort] = portList
+	// }
+	// ports := []string{"8081:tcp:0.0.0.0:8080", "8082:udp:0.0.0.0:8082"}
+	for _, value := range ports {
+		port := strings.Split(value, ":")
+		natPort, _ := nat.NewPort(port[1], port[3])
+		portList := make([]nat.PortBinding, 0, 1)
+		exports[natPort] = struct{}{}
+		portList = append(portList, nat.PortBinding{HostIP: port[2], HostPort: port[0]})
+		netPort[natPort] = portList
+	}
+	// fmt.Printf("%#v", portList)
+
+	// srcPort := "8080"
+	// // 网络端口映射
+	// natPort, _ := nat.NewPort("tcp", srcPort)
+	// exports[natPort] = struct{}{}
+	// dstPort := "8081"
+	// portList := make([]nat.PortBinding, 0, 1)
+	// portList = append(portList, nat.PortBinding{HostIP: "0.0.0.0", HostPort: dstPort})
+	// netPort[natPort] = portList
+	// fmt.Printf("%#v", portList)
 
 	resp, err := c.cli.ContainerCreate(ctx,
 		// &containers.Config{
@@ -93,10 +121,11 @@ func (c *ContainerService) CreateContainer(cmd []string, volume map[string]strin
 		// 	},
 		// },
 		&containers.Config{
-			Image:        "ubuntu:20.04",
+			Image:        image,
 			ExposedPorts: exports,
-			// Cmd:          []string{"bash"},
-			Tty: true,
+			Cmd:          cmd,
+			Tty:          true,
+			OpenStdin:    true,
 		},
 		&containers.HostConfig{
 			// PortBindings: nat.PortMap{
@@ -119,15 +148,16 @@ func (c *ContainerService) CreateContainer(cmd []string, volume map[string]strin
 			},
 		},
 		nil,
-		"test1")
+		name)
 	if err != nil {
 		log.Fatal("容器创建失败", err)
 		return nil
 	}
 	if err = c.cli.ContainerStart(ctx, resp.ID, types.ContainerStartOptions{}); err != nil {
-		log.Fatal("容器启动失败", err)
+		log.Fatal("容器创建失败", err)
 		return nil
 	}
+	fmt.Println("容器创建成功")
 	return nil
 }
 
