@@ -176,6 +176,17 @@ Deepin GoLang 库是一个包含许多有用的 go 例程的库，用于 glib、
 
 仓库链接：[https://github.com/linuxdeepin/go-lib](https://github.com/linuxdeepin/go-lib)
 
+## doxygen文档
+
+生成文档，在项目根目录执行
+
+```bash
+cmake -B build
+cmake --build build --target doxygen
+cd build/docs/html
+xdg-open index.html
+```
+
 # DDE桌面移植
 
 ## DTK安装与编译
