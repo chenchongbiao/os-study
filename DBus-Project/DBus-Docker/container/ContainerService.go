@@ -56,7 +56,7 @@ func NewContainer(service *dbusutil.Service, cli *client.Client) *ContainerServi
 	return &containerService
 }
 
-func (c *ContainerService) CreateContainer(name, image string, cmd, ports []string, volumes map[string]interface{}) (busErr *dbus.Error) {
+func (c *ContainerService) CreateContainer(name, image string, cmd, ports []string, volumes map[string]interface{}, tty, openStdin bool) (busErr *dbus.Error) {
 	// name, image, workDir string, cmd []string, volumes map[string]interface{}, map[string]interface{}
 	ctx := context.Background()
 	// volumes := map[string]string{
