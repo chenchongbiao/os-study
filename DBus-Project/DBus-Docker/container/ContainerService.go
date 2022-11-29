@@ -259,3 +259,14 @@ func (c *ContainerService) SearchContainerById(containerId string) (result strin
 	fmt.Printf("获取容器数据成功%#v", container)
 	return result, nil
 }
+
+func (c *ContainerService) RmContainerById(containerId string) (busErr *dbus.Error) {
+	ctx := context.Background()
+	err := c.cli.ContainerRemove(ctx, containerId, types.ContainerRemoveOptions{Force: true})
+	if err != nil {
+		log.Fatal("容器删除失败 ", err.Error())
+		return nil
+	}
+	fmt.Println("容器删除成功")
+	return nil
+}
