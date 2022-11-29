@@ -181,7 +181,7 @@ func (c *ContainerService) GetContainerList() (result string, busErr *dbus.Error
 func (c *ContainerService) StopContainer(containerID string) (busErr *dbus.Error) {
 	ctx := context.Background()
 
-	timeout := int(time.Minute)
+	timeout := int(time.Minute * 2)
 	err := c.cli.ContainerStop(ctx, containerID, containers.StopOptions{Timeout: &timeout})
 	if err != nil {
 		log.Fatal("容器停止失败 ", err.Error())
