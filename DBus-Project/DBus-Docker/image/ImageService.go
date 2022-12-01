@@ -86,7 +86,7 @@ func (image *Image) PullPrivateImage(img, user, password string) (busErr *dbus.E
 
 func (image *Image) GetImageList() (result string, busErr *dbus.Error) {
 	ctx := context.Background()
-	images, err := image.cli.ImageList(ctx, types.ImageListOptions{All: true})
+	images, err := image.cli.ImageList(ctx, types.ImageListOptions{})
 	if err != nil {
 		log.Fatal("镜像列表获取失败", err)
 	}
