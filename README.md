@@ -184,8 +184,7 @@ Deepin GoLang 库是一个包含许多有用的 go 例程的库，用于 glib、
 cmake -B build
 （实验主题是否正确cmake -Bbuild -DBUILD_DOCS=1 -DBUILD_THEME=1）
 cmake --build build --target doxygen
-cd build/docs/html
-xdg-open index.html
+xdg-open build/docs/html/index.html
 ```
 
 ### 注意
