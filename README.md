@@ -227,6 +227,14 @@ DTK链接：[https://github.com/orgs/linuxdeepin/repositories?q=dtk](https://git
 
 ### 基础环境
 
+更改源
+
+```bash
+# 更改源以获取 DTK 源码、相关依赖软件
+sudo sed -i "s%#deb-src%deb-src%g" /etc/apt/sources.list 
+sudo apt update
+```
+
 从源码编译DTK组件，则需要首先安装基础环境，打开终端输入以下命令：
 
 ```bash
@@ -234,3 +242,95 @@ sudo apt install git build-essential cmake devscripts doxygen graphviz
 ```
 
  尝试以openkylin安装，其中graphviz无法安装。
+
+源码编译
+
+dtkcore
+
+```bash
+git clone -b [tags] https://github.com/linuxdeepin/dtkcore.git
+cd dtkcore
+sudo apt build-dep ./
+cmake -B build
+cmake --build build -j$(nproc)
+```
+
+dtkgui
+
+```bash
+git clone -b [tags] https://github.com/linuxdeepin/dtkgui.git`
+cd dtkgui
+sudo apt build-dep ./
+cmake -B build
+cmake --build build -j$(nproc)
+```
+
+dtkwidget
+
+```bash
+git clone -b [tags] https://github.com/linuxdeepin/dtkwidget.git
+cd dtkwidget
+sudo apt build-dep ./
+cmake -B build
+cmake --build build -j$(nproc)
+```
+
+qt5integration
+
+```bash
+git clone -b [tags] https://github.com/linuxdeepin/qt5integration.git`
+cd qt5integration
+mkdir build && cd build
+sudo apt build-dep ../
+qmake ..
+make
+```
+
+若编译完成后需要安装有两种可选方案：
+
+```bash
+debuild -us -uc -b    #打包成deb包可分享给他人
+sudo make install     #源码安装
+```
+
+推荐使用debuild命令。
+
+make install命令适用于打包调用，直接这种方式安装可能会破坏环境，风险自理。
+
+脚本
+
+```bash
+#!/bin/sh
+# DTK主要就是下面几个库
+
+DTK_LIST="dtkcore dtkgui dtkwidget"
+QT5INTEGRATION="qt5integration"  # 因为qt5integration是qmake编译的单独写一个
+# 1.更改源以获取 DTK 源码、相关依赖软件
+sudo sed -i "s%#deb-src%deb-src%g" /etc/apt/sources.list 
+sudo apt update
+# 2.安装 git、Qt、编译工具集
+sudo apt -y install git qtcreator qt5-default qtdeclarative5-dev g++ cmake qttools5-dev build-essential
+# 安装dtk模板（qtcreator新建项目的dtk模板）
+sudo apt install -y qtcreator-template-dtk
+# 3. 安装 DTK 编译环境
+sudo apt -y build-dep $DTK_LIST
+# 4.在桌面创建目录存放源码
+WORK_SPACE=~/Desktop/DTK_SRC && mkdir -p $WORK_SPACE && cd $WORK_SPACE
+# 5.下载代码
+apt source $DTK_LIST
+# 6.建立 build 目录并编译、安装
+SRC_LIST=$(find . -maxdepth 1 -mindepth 1 -type d) 
+for proj in $SRC_LIST; 
+    do 
+        mkdir -p $proj/build && cd $proj/build; 
+        cmake .. && make -j2 && sudo make install && cd $WORK_SPACE; 
+    done;
+# 7.创建目录存放qt5integration源码
+QT5INTEGRATION_WORK_SPACE=~/Desktop/QT5INTEGRATION_SRC && mkdir -p $QT5INTEGRATION_WORK_SPACE && cd $QT5INTEGRATION_WORK_SPACE
+apt source $QT5INTEGRATION
+# 8.建立 build 目录并编译、安装
+QT5INTEGRATION_SRC=$(find . -maxdepth 1 -mindepth 1 -type d)
+mkdir -p $QT5INTEGRATION_SRC/build && cd $QT5INTEGRATION_SRC/build
+qmake .. && make -j2 && sudo make install
+echo "======================编译完成========================"
+```
