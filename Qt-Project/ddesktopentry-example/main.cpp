@@ -1,6 +1,5 @@
 #include <QDebug>
 #include <QString>
-#include <QTemporaryFile>
 #include <DDesktopEntry>
 #include <QFile>
 
