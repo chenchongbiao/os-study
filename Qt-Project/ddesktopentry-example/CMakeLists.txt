@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1.0) # 指定cmake最低版本
+cmake_minimum_required(VERSION 3.1.0)         # 指定cmake最低版本
 
 project(example1 VERSION 1.0.0 LANGUAGES CXX) # 指定项目名称, 版本, 语言 cxx就是c++
 
@@ -25,4 +25,4 @@ add_executable(${target}                      # 生成可执行文件
 target_link_libraries(${target} PRIVATE       # 添加需要链接的共享库
     Qt5::Core
     dtkcore
-) # 链接库
+)
