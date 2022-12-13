@@ -1,0 +1,38 @@
+{
+	"version": "2.0.0",
+	"options": {
+		"cwd": "${workspaceFolder}/build"
+	},
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "build: ddesktopentry-example",
+			"command": "cmake",
+			"args": [
+				".."
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake template build task"
+		},
+		{
+            "label": "make: ddesktopentry-example",
+            "command": "make",
+            "args": [
+
+            ]
+        },
+		{
+			"label": "Build",
+			"dependsOrder": "sequence", // 按列出的顺序执行依赖项目
+			"group": {
+                "kind": "build",
+                "isDefault": true
+            },
+			"dependsOn":[
+				"build: ddesktopentry-example",
+				"make: ddesktopentry-example"
+			]
+		}
+	]
+}
