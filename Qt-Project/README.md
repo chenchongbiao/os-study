@@ -139,6 +139,153 @@ Qt的元对象系统是一个基于标准C++的扩展，为Qt提供了3个重要
 
 信号和槽是Qt编程的基础，也是Qt的一大创新。有了信号和槽的编程机制，在Qt中处理界面各个组件的交互操作变得更加直观和简单。所谓信号和槽，实际就是观察者模式。当某个事件发生之后，比如按钮被单击，就会发出一个信号。GUI程序设计的主要内容就是对界面上各组件发出的信号进行响应，需要知道什么情况下会发出哪些信号，合理地去响应和处理这些信号。
 
+# Q_D指针和Q_Q指针
+
+项目代码：Q_D_Demo
+
+作用：
+
+* 信息隐藏：把类头文件中的私有数据成员和方法隐藏起来，只暴露用户需要的接口
+* 二进制兼容：如果程序从一个以前版本的库动态链接到新版本的库之后，能够继续正常运行，而不需要重新编译，那么我们就说这个库是二进制兼容的。
+
+## Q_D指针
+
+> 在class中配合使用 Q_DECLARE_PRIVATE 和 Q_D ，方便获取d指针，d指针指向Class##Private；
+
+## Q_Q指针
+
+> 在class##Private配合使用 Q_DECLARE_PUBLIC 和 Q_Q ，方便获取q指针，q指针指向原class本身；
+> Q_DECLARE_PRIVATE 和 Q_DECLARE_PUBLIC 在作用是定义d_func和q_func这两个函数, 他们是用来在Class和Class##Private中获取彼此的指针。
+> Q_D 和 Q_Q 宏是用过上面定义的d_func和q_func函数来获取d、q指针
+
+## 实际运用
+
+**使用Q_D指针指向私有成员和Q_Q指针指向公开成员**
+
+开发DLL为什么要使用Q_D/Q_Q指针？
+ 假如，我们要把下面这个类封装成DLL：
+
+```cpp
+class MyClass
+{
+	public:
+	  MyClass();
+	  ~MyClass();
+	private:
+	  int myVar;
+};
+```
+
+显然，这个私有成员myVar是我们不想给第三方看到的，而且是代码[二进制](https://so.csdn.net/so/search?q=%E4%BA%8C%E8%BF%9B%E5%88%B6&spm=1001.2101.3001.7020 "二进制")兼容性的大敌。所以我们使用Q_D指针和Q_D指针，对该私有成员myVar进行私有化。
+
+### 使用d_ptr指针指向MyClass的私有成员
+
+我们定义一个私有类MyClassPrivate,并配合Q_DECLARE_PRIVATE宏，以定义指针d_ptr指向该私有类。
+
+```cpp
+class MyClassPrivate;
+class MyClass
+{
+	public:
+	  MyClass();
+	  ~MyClass();
+	private:
+	  MyClassPrivate * const d_ptr;
+	  Q_DECLARE_PRIVATE(MyClass);
+};
+```
+
+然后，我们把MyClass类中该隐藏的变量塞到私有类MyClassPrivate中，下面展示私有类MyClassPrivate的实现：
+
+```cpp
+class MyClassPrivate
+{
+	public:
+	  MyClassPrivate(MyClass *parent);
+	private:
+	  MyClass * const q_ptr;
+	  Q_DECLARE_PUBLIC(MyClass);
+	  int myVar;
+};
+```
+
+### 使用q_ptr指针指向MyClass的公有成员
+
+从私有类MyClassPrivate的实现代码可以看到，我们在私有类中，配合Q_DECLARE_PUBLIC宏来定义q_ptr指针指向MyClass的公有成员。
+
+以上就是Qt使用Q_D和Q_Q指针私有实现的基本方法，下面给出一个比较完整的例子：
+ [ myclass.h]
+
+```cpp
+#ifndef MYCLASS_H
+#define MYCLASS_H
+
+#include <QtCore/QObject>
+
+class MyClassPrivate;
+class MyClass: public QObject
+{
+      Q_OBJECT
+public:
+      MyClass(QObject *parent = nullptr);
+      virtual ~MyClass();
+      void dummyFunc();
+
+signals:
+      void dummySignal();
+
+private:
+      MyClassPrivate * const d_ptr = nullptr;
+      Q_DECLARE_PRIVATE(MyClass)
+      Q_DISABLE_COPY(MyClass)              //防止指针d_ptr的二次释放
+};
+#endif // MYCLASS_H
+```
+
+[myclass.cpp]
+
+```cpp
+#include "myclass.h"
+
+class MyClassPrivate : public QObject
+{
+public:
+    MyClassPrivate(MyClass *parent)
+    : q_ptr(parent)
+    {
+    }
+    void foobar()
+    {
+        Q_Q(MyClass);
+        emit q->dummySignal();
+    }
+private:
+    MyClass * const q_ptr = nullptr;
+    Q_DECLARE_PUBLIC(MyClass)
+
+};
+
+MyClass::MyClass(QObject *parent)
+  : QObject(parent)
+  , d_ptr(new MyClassPrivate(this))
+{
+
+}
+
+MyClass::~MyClass()
+{
+    Q_D(MyClass);
+    delete d;
+}
+
+void MyClass::dummyFunc()
+{
+    Q_D(MyClass);
+    d->foobar();
+}
+
+```
+
 # UOS程序启动器
 
 项目名：starter-demo
