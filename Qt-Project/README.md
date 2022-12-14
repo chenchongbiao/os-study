@@ -286,6 +286,72 @@ void MyClass::dummyFunc()
 
 ```
 
+# QTest单元测试框架
+
+Qt Test 是一个用于对基于 Qt 的应用程序和库进行单元测试的框架。Qt Test 提供了单元测试框架中常见的所有功能以及用于测试图形用户界面的扩展
+
+## Qt Test特性
+
+Qt Test 旨在简化基于 Qt 的应用程序和库的单元测试的编写：
+
+| 特征          | 细节                                                                |
+| ------------- | ------------------------------------------------------------------- |
+| 轻量级        | Qt Test 由大约 6000 行代码和 60 个导出符号组成。                    |
+| 自包含        | Qt Test 只需要 Qt Core 模块中的几个符号来进行非 gui 测试。          |
+| 快速测试      | Qt Test 不需要特殊的测试运行器；没有特殊的测试注册。                |
+| 数据驱动测试  | 可以使用不同的测试数据多次执行测试。                                |
+| 基本 GUI 测试 | Qt Test 提供了鼠标和键盘模拟的功能。                                |
+| 基准测试      | Qt Test 支持基准测试并提供多个测量后端                              |
+| IDE 友好      | Qt Test 输出可由 Qt Creator、Visual Studio 和 KDevelop 解释的消息。 |
+| 线程安全      | 错误报告是线程安全和原子的。                                        |
+| 类型安全      | 模板的广泛使用可以防止隐式类型转换引入的错误。                      |
+| 易于扩展      | 自定义类型可以很容易地添加到测试数据和测试输出中。                  |
+
+## AutoTest 插件 
+
+qtCreator 中 帮助->关于插件->实用工具>AutoTest勾选上，默认自动勾选
+
+## 使用QMake构建单元测试
+
+如果您将qmake其用作构建工具，只需将以下内容添加到您的项目文件中：
+
+```cpp
+QT += testlib
+```
+
+## QTest 命令行参数
+
+语法
+
+执行自动测试的语法采用以下简单形式：
+
+```bash
+testname [options] [ testfunctions [：testdata ] ] .. . 
+```
+
+替换testname为您的可执行文件的名称。testfunctions可以包含要执行的测试函数的名称。如果没有testfunctions通过，则运行所有测试。如果您在 中附加条目的名称testdata，则测试函数将仅使用该测试数据运行。
+
+```
+/ myTestDirectory$ testQString toUpper
+```
+
+toUpper运行使用所有可用测试数据调用的测试函数。
+
+```bash
+/myTestDirectory$ testQString toUpper toInt:zero
+```
+
+toUpper使用所有可用的测试数据运行测试函数，并toInt调用带有测试数据的测试函数zero（如果指定的测试数据不存在，则关联的测试将失败）。
+
+```bash
+/myTestDirectory$ testMyWidget - vs - eventdelay 500
+```
+
+## 创建测试
+
+要创建测试，请将QObject子类化并为其添加一个或多个私有槽。每个私有插槽都是您测试中的一个测试函数。`QTest::qExec ()` 可用于执行测试对象中的所有测试函数。
+
+
 # UOS程序启动器
 
 项目名：starter-demo
