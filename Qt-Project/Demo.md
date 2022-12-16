@@ -37,3 +37,19 @@
 [Qt QSqlite数据库](https://blog.csdn.net/kchmmd/article/details/122625874)
 
 [QT通过数据封装实现Json结构和数据类之间的相互转换](https://blog.csdn.net/Cappuccino_jay/article/details/126604433?spm=1001.2101.3001.6650.2&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EYuanLiJiHua%7EPosition-2-126604433-blog-127226106.pc_relevant_3mothn_strategy_recovery&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EYuanLiJiHua%7EPosition-2-126604433-blog-127226106.pc_relevant_3mothn_strategy_recovery&utm_relevant_index=3)
+
+# ddesktopentry-example
+
+介绍：关于desktop文件操作的例子。
+
+# dconfig-example
+
+介绍：dconfig策略配置的例子。
+
+不过写的有点麻烦，参考dtkcore单元测试的内容。
+
+# dconfig-simple-example
+
+介绍：dconfig策略配置的例子。
+
+参考dde-app-service的example。
