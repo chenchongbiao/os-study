@@ -18,7 +18,6 @@ find_package(Dtk COMPONENTS Core REQUIRED)           # 寻找Dtk组件Core
 
 add_executable(${PROJECT_NAME}                       # 生成可执行文件
     main.cpp
-    data.qrc
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE        # 添加需要链接的共享库
@@ -26,5 +25,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE        # 添加需要链接的共�
     dtkcore
 )
 
-dconfig_meta_files(APPID dconfig-example BASE ./data FILES ./data/example.json ./data/a/example.json)
-dconfig_meta_files(APPID dconfig-example FILES ./data/example.json ./data/a/example.json)
+# include(cmake/Dtk/DtkConfig.cmake)
+
+# dconfig_meta_files函数，部署一些"meta"的配置。
+# 函数定义在dtkcommon的cmake目录下
+# APPID 应用的ID
+# BASE 用于获取子路径，如果它是空的，只复制文件，并忽略它的子路径结构。
+# FILES 需要部署的文件。
+dconfig_meta_files(
+    APPID dconfig-example 
+    BASE ./config 
+    FILES ./config/example.json ./config/a/example.json
+)
+# dconfig_meta_files(APPID dconfig-example FILES ./data/example.json ./data/a/example.json)
