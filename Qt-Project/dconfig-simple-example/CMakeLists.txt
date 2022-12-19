@@ -13,8 +13,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)                # 支持 clangd
 if (CMAKE_VERSION VERSION_LESS "3.7.0")              # 如果cmake版本小于3.7.0
     set(CMAKE_INCLUDE_CURRENT_DIR ON)                # 设置包含当前目录
 endif()
-find_package(Qt5 COMPONENTS Core REQUIRED)           # 寻找Qt5组件Core
-find_package(Dtk COMPONENTS Core REQUIRED)           # 寻找Dtk组件Core
+
+find_package(Qt5 REQUIRED COMPONENTS Core)           # 寻找Qt5组件Core
+find_package(Dtk REQUIRED COMPONENTS Core)           # 寻找Dtk组件Core
 
 add_executable(${PROJECT_NAME}                       # 生成可执行文件
     main.cpp
