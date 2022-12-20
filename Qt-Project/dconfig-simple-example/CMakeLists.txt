@@ -31,11 +31,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE        # 添加需要链接的共�
 # dconfig_meta_files函数，部署一些"meta"的配置。
 # 函数定义在dtkcommon的cmake目录下
 # APPID 应用的ID
-# BASE 用于获取子路径，如果它是空的，只复制文件，并忽略它的子路径结构。
 # FILES 需要部署的文件。
 dconfig_meta_files(
-    APPID dconfig-example 
-    BASE ./config 
-    FILES ./config/example.json ./config/a/example.json
+    APPID ${PROJECT_NAME}
+    FILES ./config/example.json
 )
 # dconfig_meta_files(APPID dconfig-example FILES ./data/example.json ./data/a/example.json)
