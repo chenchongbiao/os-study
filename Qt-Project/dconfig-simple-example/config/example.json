@@ -12,7 +12,7 @@
             "permissions": "readwrite",
             "visibility": "private"
         },
-        "key2": {
+        "key1": {
             "value": "125",
             "serial": 0,
             "flags": ["nooverride"],
@@ -22,15 +22,13 @@
             "permissions": "readwrite",
             "visibility": "public"
         },
-        "key3": {
-            "value": "application",
-            "serial": 0,
-            "flags": ["global"],
-            "name": "I am name",
-            "name[zh_CN]": "我是名字",
-            "description": "I am description",
-            "permissions": "readwrite",
-            "visibility": "public"
+        "number": {
+          "value": 1,
+          "serial": 0,
+          "flags": ["global"],
+          "name": "array value type",
+          "permissions": "readwrite",
+          "visibility": "public"
         },
         "array": {
           "value": ["value1", "value2"],
@@ -45,14 +43,6 @@
           "serial": 0,
           "flags": ["global"],
           "name": "map",
-          "permissions": "readwrite",
-          "visibility": "public"
-        },
-        "userItem": {
-          "value": "user item",
-          "serial": 0,
-          "flags": [],
-          "name": "",
           "permissions": "readwrite",
           "visibility": "public"
         }
