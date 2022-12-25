@@ -21,7 +21,7 @@ C/C++：C++代码提示。
 下载dtkwidget进行编译，如果是cmake工程使用以下操作，使用了tag 5.6.0.2
 
 ```bash
-git clone https://github.com/linuxdeepin/dtkwidget.git
+git clone https://github.com/linuxdeepin/dtkwidget.git  -b 5.6.0.2
 ```
 
 ```bash
@@ -37,10 +37,10 @@ cmake --build build -j $(nproc)
 sudo apt install doxygen  
 ```
 
-在build文件夹中找到libdcustomwidgets.so文件，并复制到设计师的插件里，重启QtCreator可以在设计师看到dtk控件。
+在build文件夹中找到libdtkuiplugin.so文件，并复制到设计师的插件里，重启QtCreator可以在设计师看到dtk控件。
 
 ```bash
-sudo cp libdcustomwidgets.so /usr/lib/x86_64-linux-gnu/qt5/plugins/designer/
+sudo cp libdtkuiplugin.so /usr/lib/x86_64-linux-gnu/qt5/plugins/designer/
 ```
 
 如果代码是qmake工程，如release/5.5分支。
@@ -291,7 +291,6 @@ void MyClass::dummyFunc()
 ## 概述
 
 QScopedPointer和C++中的智能指针std::unique_ptr其概念是一样的，它包装了new操作符在堆上分配的动态对象，能够保证动态创建的对象在任何时候都可以被正确地删除。但它有更严格的所有权，并且不能转让，一旦获取了对象的管理权，你就无法再从它那里取回来。也就是说，只要出了作用域，指针就会被自动删除，因为它的拷贝构造和赋值操作都是私有的，与QObject及其派生类风格相同。
-
 
 # QTest单元测试框架
 
