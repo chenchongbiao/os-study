@@ -52,6 +52,7 @@ func NewImage(service *dbusutil.Service, cli *client.Client) *Image {
 	}
 	return &image
 }
+
 func (image *Image) PullImage(img string) (busErr *dbus.Error) {
 	ctx := context.Background()
 	out, err := image.cli.ImagePull(ctx, img, types.ImagePullOptions{})
