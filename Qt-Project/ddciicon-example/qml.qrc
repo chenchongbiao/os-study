@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/dsg/built-in-icons">
+        <file>select_indicator.dci</file>
+    </qresource>
+</RCC>

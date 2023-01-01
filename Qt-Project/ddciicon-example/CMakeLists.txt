@@ -23,6 +23,7 @@ find_package(Dtk REQUIRED COMPONENTS Widget)         # 寻找Dtk组件Widget
 
 add_executable(${PROJECT_NAME}                       # 生成可执行文件
     main.cpp
+    qml.qrc
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE        # 添加需要链接的共享库
