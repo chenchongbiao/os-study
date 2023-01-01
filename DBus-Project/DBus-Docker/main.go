@@ -6,6 +6,7 @@ import (
 	"./config"
 	"./container"
 	"./image"
+	"./network"
 	"github.com/docker/docker/client"
 	"github.com/linuxdeepin/go-lib/dbusutil"
 	_ "github.com/mattn/go-sqlite3"
@@ -37,6 +38,8 @@ func main() {
 	fmt.Println("镜像服务启动成功", img)
 	con := container.NewContainer(service, cli)
 	fmt.Println("容器服务启动成功", con)
+	net := network.NewNetwork(service, cli)
+	fmt.Println("容器服务启动成功", net)
 	service.Wait()
 	db.Close()
 }
