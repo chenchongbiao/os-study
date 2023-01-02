@@ -16,7 +16,7 @@ endif()
 
 find_package(Qt5 REQUIRED COMPONENTS Core)           # 寻找Qt5组件Core
 find_package(Qt5 REQUIRED COMPONENTS Gui)            # 寻找Qt5组件Core
-find_package(Qt5 REQUIRED COMPONENTS Widgets)        # 寻找Qt5组件Core
+find_package(Qt5 REQUIRED COMPONENTS Widgets)        # 寻找Qt5组件Widgets
 find_package(Dtk REQUIRED COMPONENTS Core)           # 寻找Dtk组件Core
 find_package(Dtk REQUIRED COMPONENTS Gui)            # 寻找Dtk组件Gui
 find_package(Dtk REQUIRED COMPONENTS Widget)         # 寻找Dtk组件Widget
