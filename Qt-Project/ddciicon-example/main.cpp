@@ -2,7 +2,7 @@
 #include <DWidgetUtil>
 #include <DIconButton>
 #include <DDciIcon>
-#include <QFile>
+// #include <QFile>
 #include <QtDebug>
 #include <QFormLayout>
 #include <DMainWindow>
@@ -22,9 +22,10 @@ int main(int argc, char *argv[])
     QWidget w;
     QFormLayout* layout = new QFormLayout(&w);
 
-    QFile file(":/dsg/built-in-icons/select_indicator.dci");
-    file.open(QIODevice::ReadOnly);
-    DDciIcon dci(file.fileName());
+    // QFile file(":/dsg/built-in-icons/select_indicator.dci");
+    // file.open(QIODevice::ReadOnly);
+    qputenv("DSG_DATA_DIR", "/usr/share/dsg");
+    DDciIcon dci = DDciIcon::fromTheme("select_indicator.dci");
 
     auto icon = dci.matchIcon(0, DDciIcon::Light, DDciIcon::Hover);
     qDebug() << "DCI图标的实际大小" << dci.actualSize(icon);
