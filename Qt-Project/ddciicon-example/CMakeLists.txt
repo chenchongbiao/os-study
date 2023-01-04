@@ -17,20 +17,21 @@ endif()
 find_package(Qt5 REQUIRED COMPONENTS Core)           # 寻找Qt5组件Core
 find_package(Qt5 REQUIRED COMPONENTS Gui)            # 寻找Qt5组件Core
 find_package(Qt5 REQUIRED COMPONENTS Widgets)        # 寻找Qt5组件Widgets
+find_package(DtkCore REQUIRED)
 find_package(Dtk REQUIRED COMPONENTS Core)           # 寻找Dtk组件Core
 find_package(Dtk REQUIRED COMPONENTS Gui)            # 寻找Dtk组件Gui
 find_package(Dtk REQUIRED COMPONENTS Widget)         # 寻找Dtk组件Widget
 
 add_executable(${PROJECT_NAME}                       # 生成可执行文件
     main.cpp
-    # qml.qrc
+    qml.qrc
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE        # 添加需要链接的共享库
     Qt5::Core
     Qt5::Gui
     Qt5::Widgets
-    dtkcore
+    Dtk::Core
     dtkgui
     dtkwidget
 )
