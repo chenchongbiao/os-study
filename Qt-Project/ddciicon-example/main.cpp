@@ -2,15 +2,12 @@
 #include <DWidgetUtil>
 #include <DIconButton>
 #include <DDciIcon>
-// #include <QFile>
 #include <QtDebug>
 #include <QFormLayout>
 #include <DMainWindow>
 #include <QWidget>
 #include <QLabel>
 #include <QHBoxLayout>
-#include <QMouseEvent>
-#include <QPalette>
 
 DWIDGET_USE_NAMESPACE
 
@@ -24,8 +21,7 @@ int main(int argc, char *argv[])
 
     // QFile file(":/dsg/built-in-icons/select_indicator.dci");
     // file.open(QIODevice::ReadOnly);
-    qputenv("DSG_DATA_DIR", "/usr/share/dsg");
-    DDciIcon dci = DDciIcon::fromTheme("select_indicator.dci");
+    DDciIcon dci = DDciIcon::fromTheme("select_indicator");
 
     auto icon = dci.matchIcon(0, DDciIcon::Light, DDciIcon::Hover);
     qDebug() << "DCI图标的实际大小" << dci.actualSize(icon);
@@ -49,9 +45,7 @@ int main(int argc, char *argv[])
     layout->addRow(addBtnRow(iconBtn2, "disabled state"));
 
     DIconButton *iconBtn3 = new DIconButton(dci);
-    //定义左键点击事件，Qt::NoModifier代表无其他修饰键被按下
-    QMouseEvent mouseEvent( QEvent::MouseButtonPress, QPoint(1,1), Qt::LeftButton , Qt::LeftButton, Qt::NoModifier );
-    QApplication::sendEvent(iconBtn3,&mouseEvent);
+    iconBtn3->setDown(true);
     layout->addRow(addBtnRow(iconBtn3, "pressed state"));
 
 //    DIconButton *iconBtn4 = new DIconButton(dci);
@@ -64,7 +58,6 @@ int main(int argc, char *argv[])
 //    iconBtn4->setPalette(p1);
 //    iconBtn4->setProperty("hovered",true);
 
-//    emit DIconButton::hoveredChanged();
 //    layout->addRow(addBtnRow(iconBtn4, "hover state"));
 
 //    QHBoxLayout *hlayout2 = new QHBoxLayout();
