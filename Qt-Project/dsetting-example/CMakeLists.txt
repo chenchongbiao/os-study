@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.1.0)                # 指定cmake最低版本
 
-project(ddciicon-example VERSION 1.0.0 LANGUAGES CXX) # 指定项目名称, 版本, 语言 cxx就是c++
+project(dsetting-example VERSION 1.0.0 LANGUAGES CXX)# 指定项目名称, 版本, 语言 cxx就是c++
 
 set(CMAKE_CXX_STANDARD 11)                           # 指定c++标准
 set(CMAKE_CXX_STANDARD_REQUIRED ON)                  # 指定c++标准要求,至少为11以上
@@ -17,8 +17,7 @@ endif()
 find_package(Qt5 REQUIRED COMPONENTS Core)           # 寻找Qt5组件Core
 find_package(Qt5 REQUIRED COMPONENTS Gui)            # 寻找Qt5组件Core
 find_package(Qt5 REQUIRED COMPONENTS Widgets)        # 寻找Qt5组件Widgets
-find_package(DtkCore REQUIRED)
-find_package(Dtk REQUIRED COMPONENTS Core)           # 寻找Dtk组件Core
+find_package(DtkCore REQUIRED)                       # 寻找Dtk组件Core
 find_package(Dtk REQUIRED COMPONENTS Gui)            # 寻找Dtk组件Gui
 find_package(Dtk REQUIRED COMPONENTS Widget)         # 寻找Dtk组件Widget
 
