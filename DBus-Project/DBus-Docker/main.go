@@ -23,7 +23,7 @@ sudo gpasswd -a $USER docker && newgrp docker
 */
 
 var (
-	cli, err = client.NewClientWithOpts(client.WithAPIVersionNegotiation())
+	cli, err = client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 )
 
 func main() {
