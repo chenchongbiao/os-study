@@ -16,9 +16,10 @@ find_package(Dtk REQUIRED COMPONENTS Widget)         # 寻找Dtk组件Widget
 
 add_executable(${PROJECT_NAME}
     "main.cpp"
-    "private/mtableviewprivate_p.h"
     "mtableview.h"
     "mtableview.cpp"
+    "checkboxheaderview.h"
+    "checkboxheaderview.cpp"
     resources.qrc
 )
 
@@ -27,5 +28,4 @@ target_link_libraries(MTableView
     ${DtkWidget_LIBRARIES}
     ${Qt5Widgets_LIBRARIES}
     Dtk::Core
-#    dtkwidget
 )
