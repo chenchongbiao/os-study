@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     table->setHorizontalHeaderLabels(QStringList() << "" << "按钮" << "操作" );
     table->setHorizontalHeader(header);
     table->setColumnWidth(0,20);
-    table->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Fixed);
+    table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Fixed);
     table->setRowCount(1);
 
 
