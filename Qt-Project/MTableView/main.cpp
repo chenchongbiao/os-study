@@ -62,7 +62,6 @@ int main(int argc, char *argv[])
     QWidget *widget = new QWidget;
     QHBoxLayout *layout = new QHBoxLayout;
     layout->addWidget(box);
-    layout->setMargin(0);
     // 设置水平居中
     layout->setAlignment(box, Qt::AlignCenter);
     // 设置部件边距
