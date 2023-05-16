@@ -69,8 +69,8 @@ int main(int argc, char *argv[])
     // 添加布局
     widget->setLayout(layout);
 
-    table->setCellWidget(0, 0, widget);
-    table->setCellWidget(0, 1, new QPushButton("测试"));
+    // table->setCellWidget(0, 0, widget);
+    // table->setCellWidget(0, 1, new QPushButton("测试"));
 
 //    QDate today = QDate::currentDate();
 //    DProgressBar *yearProgressBar = new DProgressBar();
