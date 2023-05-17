@@ -64,21 +64,35 @@ sudo cmake --build build/ --target uninstall
 
 # 配置
 
+## stow管理配置文件
+
 ```bash
-git clone git@github.com:chenchongbiao/dotfiles.git ~/.config/dotfiles
+sudo apt install stow
+```
+
+```bash
+git clone git@github.com:chenchongbiao/dotfiles.git ~/.config/.dotfiles
 ```
 
 克隆到指定目录
 
 ```bash
-cd dotfiles
+cd ~/.config/.dotfiles
 git submodule init && git submodule update
 ```
 
 初始化子模块，这里有nvim的配置。
+
+```bash
+./stow.sh
+```
 
 # 指令
 
 ## :checkhealth
 
 进行自检，提示需要改进的地方。
+
+# 相关
+
+[nvimdots 配置](https://github.com/ayamir/nvimdots)
