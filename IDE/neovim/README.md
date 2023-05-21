@@ -54,6 +54,29 @@ sudo apt install xclip
 
 使从系统和neovim的剪贴板互通
 
+## 安装字体
+
+[nerd fonts](https://github.com/ryanoasis/nerd-fonts/releases/tag/v3.0.1)
+
+```bash
+wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.0.1/SourceCodePro.tar.xz
+```
+
+下载文件
+
+```bash
+sudo mkdir -p /usr/share/fonts/SourceCodePro
+sudo tar -xvJf SourceCodePro.tar.xz -C /usr/share/fonts/SourceCodePro
+```
+
+解压
+
+```bash
+sudo fc-cache -fv
+```
+
+刷新系统字体缓存
+
 # 卸载
 
 在克隆的代码下执行一下命令
