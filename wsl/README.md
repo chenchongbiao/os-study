@@ -227,7 +227,7 @@ vim ~/.bashrc
 ```
 
 ```bash
-export DISPLAY=0:0
+export DISPLAY=:10.0
 ```
 
 #### 自动填充账号和密码
