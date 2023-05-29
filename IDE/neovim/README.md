@@ -119,3 +119,5 @@ git submodule init && git submodule update
 # 相关
 
 [nvimdots 配置](https://github.com/ayamir/nvimdots)
+
+[neovim wiki](https://github.com/neovim/neovim/wiki)
