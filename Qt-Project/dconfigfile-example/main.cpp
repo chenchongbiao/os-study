@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
     // root用户运行，save的数据会保存到/root/.config/dsg/configs-fake-global/dconfigfile-example/example.json
     // map数据对应的flags标记为NoOverride，配置项允许被覆盖，如果flags为global泽忽略用户身份，详见文档。
     userCache->save();
+    qDebug() << configFile.cacheValue(userCache.get(), "map");
 
     return a.exec();
 }

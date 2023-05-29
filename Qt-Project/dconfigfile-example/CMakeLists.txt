@@ -16,7 +16,7 @@ if (CMAKE_VERSION VERSION_LESS "3.7.0")                  # 如果cmake版本小�
 endif()
 
 find_package(Qt5 REQUIRED COMPONENTS Core)               # 寻找Qt5组件Core
-find_package(Dtk REQUIRED COMPONENTS Core)               # 寻找Dtk组件Core
+find_package(DtkCore REQUIRED COMPONENTS)                # 寻找Dtk组件Core
 
 add_executable(${PROJECT_NAME}                           # 生成可执行文件
     main.cpp
@@ -24,7 +24,7 @@ add_executable(${PROJECT_NAME}                           # 生成可执行文件
 
 target_link_libraries(${PROJECT_NAME} PRIVATE            # 添加需要链接的共享库
     Qt5::Core
-    dtkcore
+    Dtk::Core
 )
 
 # dconfig_meta_files函数，部署一些"meta"的配置。
