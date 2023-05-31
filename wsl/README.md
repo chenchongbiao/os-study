@@ -19,7 +19,7 @@
 wsl --set-default-version 2
 ```
 
-## 安装系统
+## filesystem提取安装系统
 
 以deepinv23-beta为例
 
@@ -51,34 +51,6 @@ sudo unsquashfs -d rootfs filesystem.squashfs
 
 需要通过sudo来执行否则根系统的文件权限会错误。
 
-### 使用qemu创建
-
-#### 安装qemu
-
-```bash
-sudo apt install qemu
-```
-
-#### 创建vhdx文件
-
-```bash
-qemu-img create -f vhdx disk.vhdx 50G
-```
-
-创建一个disk.vhdx的文件，50G大小，动态分配。
-
-#### 创建虚拟机
-
-```bash
-qemu-system-x86_64 -m 4G -drive file=disk.vhdx,format=vhdx -cdrom foo.iso -boot order=dc
-```
-
-命令来启动虚拟机，并指定 **vhdx** 文件作为虚拟硬盘，**iso** 文件作为光盘镜像，其中 `foo.iso` 是镜像文件名，`-m 4G` 是分配给虚拟机的内存大小，`-boot order=dc` 是指定启动顺序为先光盘后硬盘。
-
-根据提示进行系统安装。
-
-## 添加软件源
-
 ### 打包tar文件
 
 使用tar命令将解压后的目录打包成一个tar文件
@@ -106,6 +78,17 @@ deepin.exe
 
 详细使用方法参考[yuk7/wsld](https://github.com/yuk7/wsldl#wsldl)
 
+## 添加软件源
+
+```bash
+sudo vim /etc/apt/source.list
+```
+
+```bash
+deb https://community-packages.deepin.com/beige/ beige main community
+#deb-src https://community-packages.deepin.com/beige/ beige main community
+```
+
 ## 添加一个sudo用户
 
 ```bash
@@ -130,6 +113,34 @@ vim /etc/wsl.conf
 ```bash
 [boot]
 systemd=true
+```
+
+## 开启自动挂载Windows分区
+
+```bash
+vim /etc/wsl.conf
+```
+
+```bash
+[automount]
+enabled=true
+options="metadata,umask=22,fmask=11"
+```
+
+- enabled = true表示启用自动挂载功能，如果设置为false，就需要手动挂载。
+
+* options = "metadata,umask=22,fmask=11"表示挂载时的选项，其中metadata表示启用元数据支持，umask和fmask表示文件和目录的默认权限。
+* mountFsTab根据/etc/fatab的内容自动挂载
+
+## 自动挂载.X11-unix
+
+```bash
+vim /etc/wsl.conf
+```
+
+```bash
+[boot]
+command="sudo mount -t none -o bind /mnt/wslg/.X11-unix /tmp/.X11-unix"
 ```
 
 添加配置项,将wsl关闭后，重新进入。
@@ -215,10 +226,16 @@ sudo apt install xrdp xorg xorgxrdp
 ```bash
 sudo cp /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini.bak
 sudo sed -i 's/3389/3390/g' /etc/xrdp/xrdp.ini
-sudo sed -i 's/max_bpp=32/#max_bpp=32\\nmax_bpp=128/g' /etc/xrdp/xrdp.ini
-sudo sed -i 's/xserverbpp=24/#xserverbpp=24\\nxserverbpp=128/g' /etc/xrdp/xrdp.ini
+sudo sed -i '/max_bpp=32/ amax_bpp=128' /etc/xrdp/xrdp.ini
+sudo sed -i 's/max_bpp=32/#max_bpp=32/' /etc/xrdp/xrdp.ini
+sudo sed -i '/xserverbpp=24/ axserverbpp=128' /etc/xrdp/xrdp.ini
+sudo sed -i 's/xserverbpp=24/#xserverbpp=24/' /etc/xrdp/xrdp.ini
 echo dde-session > ~/.xsession
 ```
+
+* 你可以使用 `a`命令在匹配的行后面添加一个新行，例如：`sudo sed -i '/max_bpp=32/ a\\nmax_bpp=128'`，然后再用 `sudo sed -i 's/max_bpp=32/#max_bpp=32/'`把原来的行注释掉。
+* 你可以使用反斜杠加上一个字面换行符，例如：`sudo sed -i 's/max_bpp=32/#max_bpp=32\\ max_bpp=128/'`，注意这里要在反斜杠后面加一个空格。
+* 你可以使用其他工具来实现你的需求，例如awk或perl，它们可能对换行符的处理更灵活。
 
 配置DISPLAY环境变量
 
@@ -320,3 +337,95 @@ Terminal=false
 Type=Application
 Version=1.0
 ```
+
+## 设置显示管理器
+
+修改xorg配置
+
+```bash
+sudo vim /etc/X11/xorg.conf
+```
+
+修改为以下内容
+
+```bash
+Section "ServerLayout"
+    Identifier     "Layout10"
+    Screen      10  "Screen10" 0 0
+    InputDevice    "Keyboard0" "CoreKeyboard"
+    InputDevice    "Mouse0" "CorePointer"
+EndSection
+```
+
+修改lightdm的配置
+
+```bash
+sudo vim /etc/lightdm/lightdm.conf
+```
+
+```bash
+[XDMCPServer]
+ServerPath=/tmp/.X11-unix/X10
+```
+
+创建data目录
+
+```bash
+sudo mkdir -p /var/lib/lightdm/data
+sudo chown -R lightdm:lightdm /var/lib/lightdm/data
+```
+
+sudo vim /etc/xrdp/xrdp.ini
+
+[XDMCPServer]
+X11DisplayOffset=0
+
+修改DISPLAY
+
+```bash
+export DISPLAY=:/tmp/.X11-unix/X10
+```
+
+重启wsl
+
+后面部分待验证
+
+修改xorg监听端口
+
+```bash
+sudo sed -i 's/console/anybody/g' /etc/X11/Xwrapper.config
+```
+
+启用tmp.mount服务
+
+```bash
+sudo cp -v /usr/share/systemd/tmp.mount /etc/systemd/system/
+sudo systemctl enable tmp.mount
+```
+
+重启wsl
+
+```
+wsl -t wsl的名称
+```
+
+检查挂载
+
+```bash
+mount | grep /tmp
+```
+
+修复权限
+
+```
+sudo mount -o remount,rw /tmp
+sudo chown root:root /tmp/.X11-unix
+sudo chmod 1777 /tmp/.X11-unix
+```
+
+
+1. [安装xrdp和xfce4](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[^2^](https://medium.com/@apph/desktop-gui-using-wsl2-xrdp-a870a2d32df8)，这是一个轻量级的桌面环境。
+2. [修改xrdp的配置文件，把端口号改成3390](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[，并且设置最大色深为128]()[^3^](https://github.com/meyayl/packer-lxd-wsl2-systemd-xrdp)。
+3. [安装Firefox和Flash插件]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)，如果你需要浏览网页或者看视频的话。
+4. [安装xrdp-pulseaudio-installer]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)，这是一个可以让你在远程桌面中听到声音的工具。
+5. [启动xrdp服务]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[，并且在Windows上使用远程桌面连接到localhost:3390]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)。
