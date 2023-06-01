@@ -81,7 +81,7 @@ deepin.exe
 ## 添加软件源
 
 ```bash
-sudo vim /etc/apt/source.list
+sudo vim /etc/apt/sources.list
 ```
 
 ```bash
@@ -95,7 +95,12 @@ deb https://community-packages.deepin.com/beige/ beige main community
 # 添加一个bluesky用户
 useradd -m bluesky
 passwd bluesky
+usermod -aG lp bluesky
 usermod -aG sudo bluesky
+usermod -aG netdev bluesky
+usermod -aG lpadmin bluesky
+usermod -aG scanner bluesky
+usermod -aG sambashare bluesky
 
 # 设置默认shell
 su bluesky
@@ -140,10 +145,91 @@ vim /etc/wsl.conf
 
 ```bash
 [boot]
-command="sudo mount -t none -o bind /mnt/wslg/.X11-unix /tmp/.X11-unix"
+command="sleep 5; sudo umount /tmp/.X11-unix; sudo mount -t none -o bind /mnt/wslg/.X11-unix /tmp/.X11-unix"
+```
+
+## 启动tmp.mount服务
+
+启用tmp.mount服务
+
+```bash
+cp -v /usr/share/systemd/tmp.mount /etc/systemd/system/
+systemctl enable tmp.mount
 ```
 
 添加配置项,将wsl关闭后，重新进入。
+
+## 设置wsl的默认用户
+
+```bash
+# 在windows terminal
+deepin.exe config --default-user bluesky
+```
+
+## 配置中文环境
+
+```bash
+sudo dpkg-reconfigure locales
+```
+
+找到zh_CN.UTF-8回车。
+
+## 安装界面
+
+### xrdp
+
+安装xrdp
+
+```bash
+sudo apt install xrdp xorg xorgxrdp
+```
+
+#### 配置
+
+```bash
+sudo cp /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini.bak
+sudo sed -i 's/3389/3390/g' /etc/xrdp/xrdp.ini
+sudo sed -i '/max_bpp=32/ amax_bpp=128' /etc/xrdp/xrdp.ini
+sudo sed -i 's/max_bpp=32/#max_bpp=32/' /etc/xrdp/xrdp.ini
+sudo sed -i '/xserverbpp=24/ axserverbpp=128' /etc/xrdp/xrdp.ini
+sudo sed -i 's/xserverbpp=24/#xserverbpp=24/' /etc/xrdp/xrdp.ini
+echo dde-session > ~/.xsession
+```
+
+配置DISPLAY环境变量
+
+```bash
+vim ~/.bashrc
+```
+
+```bash
+export DISPLAY=:10.0
+```
+
+#### 自动填充账号和密码
+
+```bash
+sudo vim /etc/xrdp/xrdp.ini 
+```
+
+```bash
+[Xorg]
+name=Xorg
+lib=libxup.so
+username=ask
+password=ask
+ip=127.0.0.1
+port=-1
+code=20
+```
+
+找到这一段，将username和password设置成自己的。
+
+退出wsl,重启wsl再进入。
+
+打开win的桌面远程连接输入localhost:3390
+
+# 暂时不看
 
 ## 添加lightdm
 
@@ -210,63 +296,6 @@ wsl --shutdown
 export ALL_PROXY="http://<Windows的IP地址>:<代理端口>" 来设置代理环境变量。
 例如 export ALL_PROXY="http://172.19.80.1:7890"
 ```
-
-## 安装界面
-
-### xrdp方式
-
-安装xrdp
-
-```bash
-sudo apt install xrdp xorg xorgxrdp
-```
-
-#### 配置
-
-```bash
-sudo cp /etc/xrdp/xrdp.ini /etc/xrdp/xrdp.ini.bak
-sudo sed -i 's/3389/3390/g' /etc/xrdp/xrdp.ini
-sudo sed -i '/max_bpp=32/ amax_bpp=128' /etc/xrdp/xrdp.ini
-sudo sed -i 's/max_bpp=32/#max_bpp=32/' /etc/xrdp/xrdp.ini
-sudo sed -i '/xserverbpp=24/ axserverbpp=128' /etc/xrdp/xrdp.ini
-sudo sed -i 's/xserverbpp=24/#xserverbpp=24/' /etc/xrdp/xrdp.ini
-echo dde-session > ~/.xsession
-```
-
-* 你可以使用 `a`命令在匹配的行后面添加一个新行，例如：`sudo sed -i '/max_bpp=32/ a\\nmax_bpp=128'`，然后再用 `sudo sed -i 's/max_bpp=32/#max_bpp=32/'`把原来的行注释掉。
-* 你可以使用反斜杠加上一个字面换行符，例如：`sudo sed -i 's/max_bpp=32/#max_bpp=32\\ max_bpp=128/'`，注意这里要在反斜杠后面加一个空格。
-* 你可以使用其他工具来实现你的需求，例如awk或perl，它们可能对换行符的处理更灵活。
-
-配置DISPLAY环境变量
-
-```bash
-vim ~/.bashrc
-```
-
-```bash
-export DISPLAY=:10.0
-```
-
-#### 自动填充账号和密码
-
-```bash
-sudo vim /etc/xrdp/xrdp.ini 
-```
-
-```bash
-[Xorg]
-name=Xorg
-lib=libxup.so
-username=ask
-password=ask
-ip=127.0.0.1
-port=-1
-code=20
-```
-
-找到这一段，将username和password设置成自己的。
-
-退出wsl,重启wsl再进入。
 
 # 参考
 
@@ -423,9 +452,13 @@ sudo chown root:root /tmp/.X11-unix
 sudo chmod 1777 /tmp/.X11-unix
 ```
 
-
 1. [安装xrdp和xfce4](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[^2^](https://medium.com/@apph/desktop-gui-using-wsl2-xrdp-a870a2d32df8)，这是一个轻量级的桌面环境。
 2. [修改xrdp的配置文件，把端口号改成3390](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[，并且设置最大色深为128]()[^3^](https://github.com/meyayl/packer-lxd-wsl2-systemd-xrdp)。
 3. [安装Firefox和Flash插件]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)，如果你需要浏览网页或者看视频的话。
 4. [安装xrdp-pulseaudio-installer]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)，这是一个可以让你在远程桌面中听到声音的工具。
 5. [启动xrdp服务]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[，并且在Windows上使用远程桌面连接到localhost:3390]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)。
+
+* [使用top或htop命令来查看进程的CPU和内存占用情况，看看是否有资源不足或竞争的情况。]()[^1^](https://bing.com/search?q=%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%85%A2)
+* [使用strace或ltrace命令来跟踪进程的系统调用或库函数调用，看看是否有异常或耗时的操作。](https://blog.csdn.net/liyu355/article/details/89735273)[^2^](https://blog.csdn.net/liyu355/article/details/89735273)[^3^](https://www.zhihu.com/question/339198302)
+* 使用perf或xperf工具来分析进程的性能瓶颈，看看是否有优化的空间。
+* 使用gdb或lldb工具来调试进程的运行状态，看看是否有错误或死锁的情况。
