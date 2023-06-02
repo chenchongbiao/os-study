@@ -57,7 +57,7 @@ sudo unsquashfs -d rootfs filesystem.squashfs
 
 ```bash
 cd rootfs
-tar -cf rootfs.tar *
+sudo tar -cf rootfs.tar *
 ```
 
 ps: 如果使用tar -cf rootfs.tar rootfs/*的方式，会把rootfs目录给打包进去。
@@ -160,6 +160,17 @@ systemctl enable tmp.mount
 添加配置项,将wsl关闭后，重新进入。
 
 ## 设置wsl的默认用户
+
+```bash
+vim /etc/wsl.conf
+```
+
+```bash
+[user]
+default=bluesky
+```
+
+win系统下，使用deepin.exe修改。
 
 ```bash
 # 在windows terminal

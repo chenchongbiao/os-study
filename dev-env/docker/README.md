@@ -16,16 +16,14 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 
 - Docker CE (Community Edition) 是 Docker 的社区版本，包含了 Docker Engine，它是 Docker 的核心组件，在深度操作系统上安装 Docker CE 之后就可以运行容器了。但是 docker-ce-cli 和 [containerd.io](http://containerd.io) 这两个软件包也是必需品，原因如下：
-
 - Docker CLI (docker-ce-cli)：Docker CLI 是 Docker 命令行工具，用于管理 Docker 容器和图像。这个工具提供了一组命令，用于构建，运行和管理 Docker 容器。
-
 - Containerd ([containerd.io](http://containerd.io))：Containerd 是一个轻量级的守护进程，用于管理容器生命周期，包括创建，运行和销毁容器。Docker Engine 基于 containerd 构建，并使用其进行容器管理。
 
 源里暂时没有docker相关的包，这里先使用debian的包安装。使用debian安装docker的脚本。
 
 ```bash
- curl -fsSL https://get.docker.com -o get-docker.sh
- sudo sh get-docker.sh
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
 ```
 
 ## 换源
@@ -91,6 +89,24 @@ curl https://raw.githubusercontent.com/89luca89/distrobox/main/install | sudo sh
 ```
 
 不过distrobox依赖于runc docker.io,这属于旧版本docker,如果要更好的稳定性，性能和安全性版本建议使用新版的docker-ce。
+
+# deepin v23的Docker镜像
+
+可以在wsl中的记录中查看，怎么获取一个根文件系统的tar包。
+
+或者使用debootstrap制作一个根文件系统。
+
+```bash
+cat rootfs.tar | sudo docker import - deepin:v23
+```
+
+将rootfs.tar导入到docker中，镜像名为deepin:v23。
+
+```bash
+sudo docker run --name v23 -itd deepin:v23 bash
+```
+
+运行容器。
 
 # 参考
 
