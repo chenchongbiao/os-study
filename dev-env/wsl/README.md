@@ -1,23 +1,16 @@
 # WSL安装deepin
 
-## 前置条件
+## 环境要求
 
-1.使用WSL 需要开启虚拟化。
-
-在控制面板，程序开启和关闭，打开“适用于Linux的Windows子系统”和“虚拟机平台”两个可选功能，Hyper-v。
-
-2.系统版本
-
-- 对于 x64 系统：版本 1903 或更高版本，内部版本 18362 或更高版本。
-- 对于 ARM64 系统：版本 2004 或更高版本，内部版本 19041 或更高版本。
-
-3.在virtualbox安装windows虚拟机，需要在设置中为windows虚拟机启用嵌套虚拟化，即勾选“启用VT-x/AMD-V”和“启用嵌套分页”选项。
-
-4.设置WSL 2为默认版本
-
-```bash
-wsl --set-default-version 2
-```
+- 系统版本
+  - 对于 x64 系统：版本 1903 或更高版本，内部版本 18362 或更高版本。
+  - 对于 ARM64 系统：版本 2004 或更高版本，内部版本 19041 或更高版本。
+- 使用WSL 需要开启虚拟化。这里使用virtualbox安装windows11虚拟机。
+  - 在控制面板，程序开启和关闭，打开“适用于Linux的Windows子系统”和“虚拟机平台”两个可选功能。
+  - 在virtualbox安装windows虚拟机，需要在设置中为windows虚拟机启用嵌套虚拟化，即勾选“启用VT-x/AMD-V”和“启用嵌套分页”选项。
+- 安装wsl（使用wsl2)
+  - `wsl --update`
+  - `wsl --set-default-version 2`
 
 ## filesystem提取安装系统
 
@@ -76,7 +69,7 @@ deepin install rootfs.tar
 deepin.exe
 ```
 
-详细使用方法参考[yuk7/wsld](https://github.com/yuk7/wsldl#wsldl)
+详细使用方法参考[yuk7/wsldl](https://github.com/yuk7/wsldl#wsldl)
 
 ## 添加软件源
 
