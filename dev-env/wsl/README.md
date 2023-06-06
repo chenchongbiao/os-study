@@ -317,152 +317,58 @@ export ALL_PROXY="http://<Windows的IP地址>:<代理端口>" 来设置代理环
 
 # 记录
 
-## 启动lightdm错误
+## 使用wslg运行应用
 
-* 检查lightdm的权限或所有者是否正确，你可以使用
+## X11模式下
 
-```bash
-ls -l /usr/sbin/lightdm和ls -l /etc/lightdm来查看相关文件的权限和所有者
+### 问题一_GTK_FRAME_EXTENTS 原子
 
-```
+`Failed to create atom with name _GTK_FRAME_EXTENTS`
 
-```bash
-chown root:root /usr/sbin/lightdm和chmod 755 /usr/sbin/lightdm来修复权限和所有者
-```
+可能应用使用了一个不受支持的X11扩展，导致无法创建_GTK_FRAME_EXTENTS这个原子。这个原子是用来存储窗口边框的大小和位置的信息的。
 
-```
-lightdm --test-mode --debug
-```
+通过xprop工具，使用命令行启动xprop工具，再点击需要查看的应用可以查看到window id，复制下id。
 
-命令来测试lightdm
+* id是你想要设置属性的窗口的ID。
+* left,right,top,bottom是你想要设置的边框的大小，单位是像素。
+* 32c是这个属性的格式，表示32位的卡片型。
 
-## systemd设置环境变量
-
-为所有的服务设置环境变量，可以在/etc/systemd/system.conf文件中使用DefaultEnvironment=选项。
+举个例子，假设你想要给一个窗口ID为0x1600045的窗口设置_GTK_FRAME_EXTENTS属性，让它的左右边框为10像素，上下边框为20像素，你可以使用这个命令：
 
 ```bash
-DefaultEnvironment= "DISPLAY=:0" "XAUTHORITY=/home/username/.Xauthority"
+xprop -id 0x1600045 -f _GTK_FRAME_EXTENTS 32c -set _GTK_FRAME_EXTENTS 10,10,20,20
 ```
 
-可以使用EnvironmentFile=选项来指定一个包含环境变量的文件。
+注意，这个命令可能会破坏窗口的显示效果，不推荐使用。如果你想要恢复原来的属性，你可以使用这个命令：
 
 ```bash
-EnvironmentFile=/etc/test_env_service/var_file
+xprop -id 0x1600045 -remove _GTK_FRAME_EXTENTS
 ```
 
-systemctl status --user dde-filemanager-server.service
+### 尝试通过xstrace调试应用
 
-## dde-dock崩溃
+## Wayland模式下
 
-[Warning][ ] Connecting to deprecated signal QDBusConnectionInterface::serviceOwnerChanged(QString,QString,QString)
-20230529.09:31:15.041[Info][RecentAppHelper::updateRecentVisible 157 ] recent Widget count: 0 , app Widget count 0
-
-* [在/usr/share/applications目录下创建一个dde-dock.desktop文件，内容如下](https://blog.csdn.net/weixin_39652658/article/details/116967205)：
-
-```
-[Desktop Entry]
-Comment=dde-dock
-Exec=dde-dock
-Hidden=false
-Icon=desktop
-Name=dde-dock
-Terminal=false
-Type=Application
-Version=1.0
-```
-
-## 设置显示管理器
-
-修改xorg配置
+添加环境变量
 
 ```bash
-sudo vim /etc/X11/xorg.conf
+export XDG_SESSION_TYPE="wayland"
 ```
 
-修改为以下内容
+不过在wayland模式下，部分应用有问题
 
-```bash
-Section "ServerLayout"
-    Identifier     "Layout10"
-    Screen      10  "Screen10" 0 0
-    InputDevice    "Keyboard0" "CoreKeyboard"
-    InputDevice    "Mouse0" "CorePointer"
-EndSection
-```
+- 多出标题栏：
+  - deepin-terminal
+  - deepin-home-appstore-client
+- 还是以x11模式显示
+  - dde-file-manager
 
-修改lightdm的配置
+原因：
 
-```bash
-sudo vim /etc/lightdm/lightdm.conf
-```
+在deepin系统下应用标题栏绘制由窗管进行管理，在使用wslg的wayland模式下，使用的是[weston](https://gitlab.freedesktop.org/wayland/weston)管理的，应用的标题栏会被绘制。
 
-```bash
-[XDMCPServer]
-ServerPath=/tmp/.X11-unix/X10
-```
+解决办法：
 
-创建data目录
+在查看[kegechen/chore: dtkwidget csd without dxcb](https://github.com/kegechen/dtkwidget/commit/aad7d764297b87b865a5e3e38e3ad517d0de2441)的这次提交中发现，在qt代码中加入setWindowFlag(Qt::FramelessWindowHint) 方法，隐藏系统自动生成的默认边框。看是否能合入主线程中。
 
-```bash
-sudo mkdir -p /var/lib/lightdm/data
-sudo chown -R lightdm:lightdm /var/lib/lightdm/data
-```
-
-sudo vim /etc/xrdp/xrdp.ini
-
-[XDMCPServer]
-X11DisplayOffset=0
-
-修改DISPLAY
-
-```bash
-export DISPLAY=:/tmp/.X11-unix/X10
-```
-
-重启wsl
-
-后面部分待验证
-
-修改xorg监听端口
-
-```bash
-sudo sed -i 's/console/anybody/g' /etc/X11/Xwrapper.config
-```
-
-启用tmp.mount服务
-
-```bash
-sudo cp -v /usr/share/systemd/tmp.mount /etc/systemd/system/
-sudo systemctl enable tmp.mount
-```
-
-重启wsl
-
-```
-wsl -t wsl的名称
-```
-
-检查挂载
-
-```bash
-mount | grep /tmp
-```
-
-修复权限
-
-```
-sudo mount -o remount,rw /tmp
-sudo chown root:root /tmp/.X11-unix
-sudo chmod 1777 /tmp/.X11-unix
-```
-
-1. [安装xrdp和xfce4](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[^2^](https://medium.com/@apph/desktop-gui-using-wsl2-xrdp-a870a2d32df8)，这是一个轻量级的桌面环境。
-2. [修改xrdp的配置文件，把端口号改成3390](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[，并且设置最大色深为128]()[^3^](https://github.com/meyayl/packer-lxd-wsl2-systemd-xrdp)。
-3. [安装Firefox和Flash插件]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)，如果你需要浏览网页或者看视频的话。
-4. [安装xrdp-pulseaudio-installer]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)，这是一个可以让你在远程桌面中听到声音的工具。
-5. [启动xrdp服务]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)[，并且在Windows上使用远程桌面连接到localhost:3390]()[^1^](https://dhuyvett.github.io/Using-xrdp-with-WSL-2/)。
-
-* [使用top或htop命令来查看进程的CPU和内存占用情况，看看是否有资源不足或竞争的情况。]()[^1^](https://bing.com/search?q=%E8%BF%9B%E7%A8%8B%E5%90%AF%E5%8A%A8%E6%85%A2)
-* [使用strace或ltrace命令来跟踪进程的系统调用或库函数调用，看看是否有异常或耗时的操作。](https://blog.csdn.net/liyu355/article/details/89735273)[^2^](https://blog.csdn.net/liyu355/article/details/89735273)[^3^](https://www.zhihu.com/question/339198302)
-* 使用perf或xperf工具来分析进程的性能瓶颈，看看是否有优化的空间。
-* 使用gdb或lldb工具来调试进程的运行状态，看看是否有错误或死锁的情况。
+发现加入在dmainwindows的构造函数中加入setWindowFlag(Qt::FramelessWindowHint)，这样就可以让应用走csd模式，不过需要考虑兼容性问题。
