@@ -71,6 +71,48 @@ deepin.exe
 
 详细使用方法参考[yuk7/wsldl](https://github.com/yuk7/wsldl#wsldl)
 
+## debootstrap获取根文件系统
+
+原debootstrap是没有beige代号的，需要从deepin-community的包来使用。
+
+这里从ci仓库从下载，或者直接从源码编译安装。
+
+```bash
+# 需要使用dget指令，先安装devscripts
+sudo apt install devscripts
+dget https://ci.deepin.com/repo/obs/deepin:/Develop:/community/deepin_develop/debootstrap_1.0.128%2Bnmu2deepin%2Bu001.dsc
+# 解压源码
+dpkg-source -x debootstrap_1.0.128%2Bnmu2deepin%2Bu001.dsc
+cd debootstrap-1.0.128+nmu2deepin+u001
+# 安装依赖
+sudo apt build-dep .
+# 打包
+dpkg-buildpackage -us -uc -b
+# 安装
+sudo apt install ../*.deb
+```
+
+通过debootstrap来安装，这里选择版本beige
+
+```bash
+sudo debootstrap --arch=amd64 --include=systemd,dbus,locales,apt beige ./deepin-rootfs https://community-packages.deepin.com/beige beige
+```
+
+* –arch=amd64：表示指定目标系统的架构为amd64。
+* –include=systemd,dbus,locales,apt：表示指定额外安装一些软件包，用逗号分隔。
+* beige：表示指定安装的发行版为beige。
+* ./deepin-rootfs：表示指定安装的目标目录为当前目录下的deepin-rootfs文件夹。
+* https://community-packages.deepin.com/beige/：表示指定安装的软件包来源的仓库。
+
+使用tar命令将解压后的目录打包成一个tar文件
+
+```bash
+cd deepin-rootfs
+sudo tar -cf rootfs.tar *
+```
+
+当前目录会生成rootfs.tar文件。
+
 ## 添加软件源
 
 ```bash
@@ -372,3 +414,7 @@ export XDG_SESSION_TYPE="wayland"
 在查看[kegechen/chore: dtkwidget csd without dxcb](https://github.com/kegechen/dtkwidget/commit/aad7d764297b87b865a5e3e38e3ad517d0de2441)的这次提交中发现，在qt代码中加入setWindowFlag(Qt::FramelessWindowHint) 方法，隐藏系统自动生成的默认边框。看是否能合入主线程中。
 
 发现加入在dmainwindows的构造函数中加入setWindowFlag(Qt::FramelessWindowHint)，这样就可以让应用走csd模式，不过需要考虑兼容性问题。
+
+## 从最小根系统安装进行使用
+
+需要开启systemd来启动dbus，需要安装dde-qt5integration，字体[`fonts-noto-cjk`](https://superuser.com/questions/1692366/garbled-texts-on-wsl-gui-application)。
