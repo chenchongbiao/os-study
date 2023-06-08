@@ -85,10 +85,44 @@ Distrobox 是一个命令行工具，它使用 Docker 或 Podman 提供访问多
 使用安装脚本
 
 ```bash
-curl https://raw.githubusercontent.com/89luca89/distrobox/main/install | sudo sh
+sudo apt install distrobox
 ```
 
-不过distrobox依赖于runc docker.io,这属于旧版本docker,如果要更好的稳定性，性能和安全性版本建议使用新版的docker-ce。
+不过distrobox依赖于runc docker.io,这属于旧版本docker,如果要更好的稳定性，性能和安全性版本建议使用新版的docker-ce，不过这样就无法使用distrobox。
+
+## 使用
+
+### 创建容器
+
+```bash
+distrobox create --image debian:latest --name debian
+```
+
+### 查看容器列表
+
+```bash
+distrobox list
+```
+
+### 进入容器
+
+```bash
+distrobox enter debian
+```
+
+进入容器后使用exit命令退出。
+
+### 删除容器
+
+```bash
+distrobox rm debian
+```
+
+### 停止容器
+
+```bash
+distrobox stop debian
+```
 
 # deepin v23的Docker镜像
 

@@ -418,3 +418,7 @@ export XDG_SESSION_TYPE="wayland"
 ## 从最小根系统安装进行使用
 
 需要开启systemd来启动dbus，需要安装dde-qt5integration，字体[`fonts-noto-cjk`](https://superuser.com/questions/1692366/garbled-texts-on-wsl-gui-application)。
+
+# TODO
+
+使用lightdm，使用xdmcp，然后写一个服务在lightdm启动之后启动XWayland -query。
