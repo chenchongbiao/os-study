@@ -95,7 +95,7 @@ sudo apt install ../*.deb
 通过debootstrap来安装，这里选择版本beige
 
 ```bash
-sudo debootstrap --arch=amd64 --include=systemd,dbus,locales,apt beige ./deepin-rootfs https://community-packages.deepin.com/beige beige
+sudo debootstrap --arch=amd64 --include=systemd,dbus,locales,apt --components=main,commercial,community beige ./deepin-rootfs
 ```
 
 * –arch=amd64：表示指定目标系统的架构为amd64。
@@ -107,8 +107,7 @@ sudo debootstrap --arch=amd64 --include=systemd,dbus,locales,apt beige ./deepin-
 使用tar命令将解压后的目录打包成一个tar文件
 
 ```bash
-cd deepin-rootfs
-sudo tar -cf rootfs.tar *
+sudo tar -cf deepin-rootfs.tar -C deepin-rootfs .
 ```
 
 当前目录会生成rootfs.tar文件。
