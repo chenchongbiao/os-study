@@ -100,9 +100,9 @@ sudo debootstrap --arch=amd64 --include=systemd,dbus,locales,apt --components=ma
 
 * –arch=amd64：表示指定目标系统的架构为amd64。
 * –include=systemd,dbus,locales,apt：表示指定额外安装一些软件包，用逗号分隔。
+* --components=main,commercial,community：需要包含的组件，否则默认只有main，这样有些软件就无法下载。
 * beige：表示指定安装的发行版为beige。
 * ./deepin-rootfs：表示指定安装的目标目录为当前目录下的deepin-rootfs文件夹。
-* https://community-packages.deepin.com/beige/：表示指定安装的软件包来源的仓库。
 
 使用tar命令将解压后的目录打包成一个tar文件
 
