@@ -416,7 +416,7 @@ export XDG_SESSION_TYPE="wayland"
 
 ## 从最小根系统安装进行使用
 
-需要开启systemd来启动dbus，需要安装dde-qt5integration，字体[`fonts-noto-cjk`](https://superuser.com/questions/1692366/garbled-texts-on-wsl-gui-application)。
+需要开启systemd来启动dbus，需要安装 `dde-qt5integration dde-qt5wayland-plugin`，字体[`fonts-noto-cjk`](https://superuser.com/questions/1692366/garbled-texts-on-wsl-gui-application)。
 
 # TODO
 
