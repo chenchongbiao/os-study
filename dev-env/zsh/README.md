@@ -25,8 +25,7 @@ sudo apt install git
 ```
 
 ```bash
-git clone git@github.com:ohmyzsh/ohmyzsh.git
-sh ohmyzsh/tools/install.sh
+git clone git@github.com:ohmyzsh/ohmyzsh.git .oh-my-zsh
 ```
 
 修改主题
