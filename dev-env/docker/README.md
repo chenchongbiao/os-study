@@ -46,6 +46,31 @@ sudo usermod -aG docker $USER
 newgrp docker
 ```
 
+## 修改容器存放的位置
+
+```bash
+sudo vim /etc/docker/daemon.json
+```
+
+```bash
+{
+  "graph": "/new-path/docker"
+}
+
+```
+
+如果之前已经有很多容器和镜像，需要把 **/var/lib/docker** 目录下的所有文件复制到新的目录下。注意将原/var/lib/docker目录删除或者转移，否则会出现重复挂载的情况。例如：
+
+```bash
+sudo cp -R /var/lib/docker /new-path/
+```
+
+```bash
+sudo systemctl restart docker
+```
+
+重启docker服务才能生效。
+
 # Docker Compose
 
 Compose 是用于定义和运行多容器 Docker 应用程序的工具。通过 Compose，您可以使用 YML 文件来配置应用程序需要的所有服务。然后，使用一个命令，就可以从 YML 文件配置中创建并启动所有服务。
