@@ -59,7 +59,7 @@ sudo vim /etc/docker/daemon.json
 
 ```
 
-如果之前已经有很多容器和镜像，需要把 **/var/lib/docker** 目录下的所有文件复制到新的目录下。注意将原/var/lib/docker目录删除或者转移，否则会出现重复挂载的情况。例如：
+这里的/new-path/docker是指存在的某个路径，如果有其他磁盘想将docker相关的数据存放到别的磁盘可以进行设置，否则使用不需要设置。如果之前已经有很多容器和镜像，需要把 **/var/lib/docker** 目录下的所有文件复制到新的目录下。注意将原/var/lib/docker目录删除或者转移，否则会出现重复挂载的情况。例如：
 
 ```bash
 sudo cp -R /var/lib/docker /new-path/
@@ -147,6 +147,17 @@ distrobox rm debian
 
 ```bash
 distrobox stop debian
+```
+
+# x11docker
+
+x11docker是一款允许在Docker容器中运行图形应用程序的软件。它通过在主机系统上运行X显示服务器，给Docker提供了GUI的支持。此外，x11docker对Docker和X window提供安全增强，实现以容器隔离并预防X window安全漏洞，通沙盒环境运行图形程序，以保护主机系统的安全。
+
+## 安装
+
+```bash
+git clone git@github.com:mviereck/x11docker.git
+cd x11docker && sudo bash x11docker --update
 ```
 
 # deepin v23的Docker镜像
