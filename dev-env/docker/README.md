@@ -10,6 +10,15 @@ Docker 从 17.03 版本之后分为 CE（Community Edition: 社区版） 和 EE�
 
 # 安装
 
+如果需要使用distrobox工具的话请安装。
+
+```bash
+sudo apt-get update
+sudo apt install docker.io
+```
+
+如果想获取较好的功能支持，请使用下面的。
+
 ```bash
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
@@ -147,6 +156,32 @@ distrobox rm debian
 
 ```bash
 distrobox stop debian
+```
+
+## 使用APPIMAGE
+
+安装FUSE库支持
+
+```bash
+sudo apt install libfuse2 fuse3
+```
+
+在/etc/ld.so.conf.d/目录下新建文件fuse.conf
+
+```
+sudo vim /etc/ld.so.conf.d/fuse.conf
+```
+
+输入fuse的安装路径 /usr/local/lib
+
+```bash
+/usr/local/lib
+```
+
+保存退出，执行ldconfig 重新挂载
+
+```bash
+ldconfig
 ```
 
 # x11docker
