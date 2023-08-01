@@ -184,6 +184,24 @@ sudo vim /etc/ld.so.conf.d/fuse.conf
 ldconfig
 ```
 
+## 单独配置Git
+
+为了与外部区别，重新配置一份gitconfig
+
+```bash
+sudo cp ~/.gitconfig /etc/gitconfig
+```
+
+profile.d下面编辑一个git_config.sh
+
+```bash
+sudo vim /etc/profile.d/git_config.sh
+```
+
+```bash
+alias git='git -c include.path="/etc/gitconfig"'
+```
+
 # x11docker
 
 x11docker是一款允许在Docker容器中运行图形应用程序的软件。它通过在主机系统上运行X显示服务器，给Docker提供了GUI的支持。此外，x11docker对Docker和X window提供安全增强，实现以容器隔离并预防X window安全漏洞，通沙盒环境运行图形程序，以保护主机系统的安全。
