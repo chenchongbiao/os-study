@@ -213,6 +213,20 @@ git clone git@github.com:mviereck/x11docker.git
 cd x11docker && sudo bash x11docker --update
 ```
 
+拉取 x11docker/xserver 镜像，这个是用来运行 X 服务器的镜像。
+
+```bash
+docker pull x11docker/xserver
+```
+
+拉取 x11docker/deepin 镜像，一个 deepin v20 的仓库。
+
+```bash
+x11docker --desktop --gpu --systemd --pulseaudio x11docker/deepin
+```
+
+运行起来后可以运行一个比较流程界面。
+
 # deepin v23的Docker镜像
 
 可以在wsl中的记录中查看，怎么获取一个根文件系统的tar包。
@@ -234,3 +248,7 @@ sudo docker run --name v23 -itd deepin:v23 bash
 # 参考
 
 [Debian Docker 安装](https://www.runoob.com/docker/debian-docker-install.html)
+
+[x11docker Github 仓库](https://github.com/mviereck/x11docker)
+
+[x11docker：让你的Docker跑图形程序](https://zhuanlan.zhihu.com/p/60073751)
