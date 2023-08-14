@@ -229,6 +229,12 @@ sudo dpkg-reconfigure locales
 sudo apt install xrdp xorg xorgxrdp
 ```
 
+如果需要使用Win桌面远程连接到 deepin 需要安装xorg,否则之安装 xrdp 和 xorgxrdp 即可。
+
+* xrdp：这是一个远程桌面协议（RDP）服务器，可以让win的远程桌面客户端连接到linux系统，并显示linux的图形界面。
+* xorg：这是一个X Window系统的实现，提供了基本的图形功能，如窗口管理、字体、颜色等。
+* xorgxrdp：这是一组模块，可以让已有的X.Org安装像X11rdp一样工作，从而提高xrdp的性能和兼容性。
+
 #### 配置
 
 ```bash
