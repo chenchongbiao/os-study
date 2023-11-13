@@ -202,6 +202,44 @@ sudo vim /etc/profile.d/git_config.sh
 alias git='git -c include.path="/etc/gitconfig"'
 ```
 
+# tigervnc 远程
+
+## 安装桌面环境。
+
+```bash
+sudo apt install deepin-desktop-environment-base
+sudo apt install deepin-desktop-environment-cli
+sudo apt install deepin-desktop-environment-core
+sudo apt install deepin-desktop-environment-extras
+sudo apt install deepin-desktop-environment-ll
+```
+
+## 安装VNC服务
+
+```bash
+sudo apt install tigervnc-standalone-server tigervnc-xorg-extension autocutsel
+```
+
+- tigervnc-standalone-server：TigerVNC的服务器端组件
+- tigervnc-xorg-extension：TigerVNC的Xorg扩展模块,实现直接共享本地显示器的功能。
+- autocutsel：一个剪贴板同步工具，它可以让您在本地和远程桌面之间复制和粘贴文本。
+
+## 客户端
+
+```bash
+sudo apt install tigervnc-viewer
+```
+
+- tigervnc-viewer：这个包是TigerVNC的客户端组件，它可以让您连接到任何支持VNC协议的服务器，并查看和控制远程桌面。
+
+## 安装XRDP服务
+
+```bash
+sudo apt install xrdp xorgxrdp
+```
+
+
+
 # x11docker
 
 x11docker是一款允许在Docker容器中运行图形应用程序的软件。它通过在主机系统上运行X显示服务器，给Docker提供了GUI的支持。此外，x11docker对Docker和X window提供安全增强，实现以容器隔离并预防X window安全漏洞，通沙盒环境运行图形程序，以保护主机系统的安全。
