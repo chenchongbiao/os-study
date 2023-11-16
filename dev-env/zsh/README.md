@@ -92,6 +92,64 @@ plugins=( git
 source ~/.zshrc
 ```
 
+## z-shell/zi
+
+z-shell/zi是一个基于Zsh的开源社区项目，它提供了一个强大的插件管理器，可以让你轻松地安装、更新、卸载和管理Zsh的插件和代码片段。它也支持一些高级功能，如异步加载、编译、钩子、补全、主题等。
+
+设置安装位置并创建目录：
+
+```bash
+typeset -Ag ZI
+typeset -gx ZI[HOME_DIR]="${HOME}/.zi" ZI[BIN_DIR]="${ZI[HOME_DIR]}/bin"
+command mkdir -p "$ZI[BIN_DIR]"
+```
+
+克隆仓库
+
+```bash
+command git clone https://github.com/z-shell/zi.git "$ZI[BIN_DIR]"
+```
+
+要启用 Zi，请从先前设置的目录中获取 zi.zsh ，并将以下代码段放入 .zshrc 文件中：
+
+```bash
+typeset -A ZI
+ZI[BIN_DIR]="${HOME}/.zi/bin"
+source "${ZI[BIN_DIR]}/zi.zsh"
+
+# 启用 Zi 补全
+autoload -Uz _zi
+(( ${+_comps} )) && _comps[zi]=_zi
+```
+
+要加载 Oh-My-Zsh 和 Prezto 插件，请使用 snippet 功能。片段是由 curl 、 wget 等下载的单个文件，正在执行下载工具的自动检测，直接从 URL 进行：
+
+```bash
+zi snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
+zi snippet 'https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh'
+```
+
+对于 Oh-My-Zsh 和 Prezto，您可以使用 OMZ:: 和 PZT:: 简写：
+
+```bash
+zi snippet OMZ::plugins/git/git.plugin.zsh
+zi snippet PZT::modules/helper/init.zsh
+```
+
+在 ~/.zshrc 添加
+
+```bash
+zi light-mode for \
+  zdharma/fast-syntax-highlighting \
+  zsh-users/zsh-autosuggestions \
+  robbyrussell/oh-my-zsh
+
+ZSH_THEME="ys"
+source $ZSH/oh-my-zsh.sh
+```
+
 # 参考
 
 [ohmyzsh-wiki](https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH)
+
+[z-shell](https://wiki.zshell.dev/zh-Hans/docs/getting_started/installation)
