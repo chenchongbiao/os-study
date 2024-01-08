@@ -80,6 +80,39 @@ sudo systemctl restart docker
 
 重启docker服务才能生效。
 
+## 允许远程
+
+为了方便测试使用，不要在生产环境使用。
+
+Docker守护进程提供了一个远程API，默认监听在Unix域套接字 `/var/run/docker.sock`上，这个套接字允许本地进程与Docker守护进程进行通信来控制容器等操作。
+
+使用下面的命令查看 docker 的 service 服务使用的哪个文件。
+
+```bash
+systemctl status docker
+```
+
+修改 service 文件
+
+```bash
+sudo sed -i 's|^ExecStart=/usr/bin/dockerd|ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375|' /lib/systemd/system/docker.service
+```
+
+重启服务
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+测试
+
+```bash
+docker -H tcp://$HOST:2375 ps
+```
+
+`$HOST` 是远程主机 ip
+
 # Docker Compose
 
 Compose 是用于定义和运行多容器 Docker 应用程序的工具。通过 Compose，您可以使用 YML 文件来配置应用程序需要的所有服务。然后，使用一个命令，就可以从 YML 文件配置中创建并启动所有服务。
@@ -237,8 +270,6 @@ sudo apt install tigervnc-viewer
 ```bash
 sudo apt install xrdp xorgxrdp
 ```
-
-
 
 # x11docker
 
