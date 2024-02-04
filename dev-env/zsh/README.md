@@ -142,14 +142,50 @@ zi snippet PZT::modules/helper/init.zsh
 zi light-mode for \
   zdharma/fast-syntax-highlighting \
   zsh-users/zsh-autosuggestions \
-  robbyrussell/oh-my-zsh
+  ohmyzsh/oh-my-zsh
 
 ZSH_THEME="ys"
 source $ZSH/oh-my-zsh.sh
 ```
+
+## zinit
+
+[Zinit](https://github.com/zdharma-continuum/zinit) 是一个灵活快速的 Zshell 插件管理器
+
+自动安装
+
+```bash
+bash -c "$(curl --fail --show-error --silent --location https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
+```
+
+安装并重新加载 shell 后，通过以下方式编译 Zinit：
+
+```bash
+zinit self-update
+```
+
+`vim ~/.zshrc`
+
+添加插件
+
+```bash
+zinit light-mode for \
+        zsh-users/zsh-autosuggestions \
+        zdharma-continuum/fast-syntax-highlighting
+```
+
+添加主题
+
+```bash
+zi ice depth=1; zi light romkatv/powerlevel10k
+```
+
+根据提示选择配置
 
 # 参考
 
 [ohmyzsh-wiki](https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH)
 
 [z-shell](https://wiki.zshell.dev/zh-Hans/docs/getting_started/installation)
+
+[powerlevel10k](https://github.com/romkatv/powerlevel10k)
