@@ -182,6 +182,21 @@ zi ice depth=1; zi light romkatv/powerlevel10k
 
 根据提示选择配置
 
+安装一些字体
+
+```bash
+sudo apt install fontconfig
+mkdir -p /usr/share/fonts/truetype/nerd
+cd /usr/share/fonts/truetype/nerd
+wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Regular.ttf
+wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold.ttf
+wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Italic.ttf
+wget https://github.com/romkatv/powerlevel10k-media/raw/master/MesloLGS%20NF%20Bold%20Italic.ttf
+
+# 刷新字体
+sudo fc-cache -f -v
+```
+
 # 参考
 
 [ohmyzsh-wiki](https://github.com/ohmyzsh/ohmyzsh/wiki/Installing-ZSH)
